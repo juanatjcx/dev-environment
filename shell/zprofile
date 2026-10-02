@@ -1,0 +1,8 @@
+# Login-shell Homebrew environment: Apple Silicon, Intel Mac, Linux/WSL.
+for brew_bin in /opt/homebrew/bin/brew /usr/local/bin/brew /home/linuxbrew/.linuxbrew/bin/brew; do
+  if [[ -x "$brew_bin" ]]; then
+    eval "$("$brew_bin" shellenv)"
+    break
+  fi
+done
+[[ -r "$HOME/.zprofile.local" ]] && source "$HOME/.zprofile.local"

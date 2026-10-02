@@ -1,0 +1,4 @@
+# Useful for searching source trees, JSON, and interactive file/history selection.
+brew "ripgrep"
+brew "jq"
+brew "fzf"

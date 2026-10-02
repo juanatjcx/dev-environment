@@ -1,0 +1,26 @@
+# Official Amazon AWS command-line interface
+brew "awscli"
+# Microsoft Azure CLI 2.0
+brew "azure-cli"
+# .NET Core
+brew "dotnet"
+# Open-source, cross-platform JavaScript runtime environment
+brew "node"
+# Firebase command-line tools
+brew "firebase-cli"
+# GitHub command-line tool
+brew "gh"
+# Manage multiple Node.js versions
+brew "nvm"
+# Password manager that keeps all passwords secure behind one password
+cask "1password"
+# OpenAI's official ChatGPT desktop app
+cask "chatgpt"
+# Anthropic's official Claude AI desktop app
+cask "claude"
+# Terminal-based AI coding assistant
+cask "claude-code"
+# OpenAI's coding agent that runs in your terminal
+cask "codex"
+# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty"

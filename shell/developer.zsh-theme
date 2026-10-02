@@ -1,0 +1,6 @@
+ZSH_THEME_GIT_PROMPT_PREFIX=' %F{yellow}git:('
+ZSH_THEME_GIT_PROMPT_SUFFIX=')%f'
+ZSH_THEME_GIT_PROMPT_DIRTY='*'
+ZSH_THEME_GIT_PROMPT_CLEAN=''
+PROMPT=$'\n%F{cyan}%~%f$(git_prompt_info)\n%(?.%F{green}.%F{red})>%f '
+RPROMPT='%(?..%F{red}exit %?%f)'

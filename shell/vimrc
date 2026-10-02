@@ -1,0 +1,20 @@
+" Small portable Vim setup; no external plugins.
+set nocompatible
+syntax enable
+filetype plugin indent on
+set number
+set hidden
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+set backspace=indent,eol,start
+set wildmenu
+set splitbelow
+set splitright
+set confirm
+" Respect language-specific indentation; projects should configure formatters.
+set shiftwidth=4
+set tabstop=4
+set expandtab
+nnoremap <leader><space> :nohlsearch<CR>
