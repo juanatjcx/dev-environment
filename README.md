@@ -116,6 +116,11 @@ SSO/login workflow; never commit their credentials or copied home directories.
   `brew bundle dump --file=inventory/Brewfile.macos --force` on macOS and
   `brew list --versions > inventory/homebrew-versions.txt`. Review the diff and
   update the portable Brewfile deliberately.
+- On the captured Mac, `brew bundle check` reports `docker-desktop` as missing
+  and bootstrap is expected to stop at the bundle step. Docker Desktop was installed without
+  a Homebrew receipt. Run either command with
+  `HOMEBREW_BUNDLE_CASK_SKIP=docker-desktop`; see
+  [the known issue](docs/containers.md#known-issue-no-homebrew-cask-receipt).
 - Avoid `brew bundle cleanup --force` with this repo; unrelated packages may
   be removed. The bootstrap never performs cleanup.
 
@@ -128,3 +133,10 @@ Bootstrap initializes Node LTS and installs Vim language tooling. See
 Docker Desktop is included in the macOS baseline and was verified locally on
 2026-10-04. See [container guidance](docs/containers.md) for installation provenance
 and checks, and [recovery/Xcode steps](docs/recovery.md).
+
+Google Chrome (`cask "google-chrome"`) was added to the macOS baseline on
+2026-10-09 for web development and browser testing; Google Chrome 155.0.8059.40
+was installed with Homebrew. Chrome updates itself, so `brew upgrade` usually
+skips it. To install it on an existing machine without rerunning bootstrap, run
+`brew install --cask google-chrome`. On Linux/WSL, install Chrome from Google's
+distro packages if needed.

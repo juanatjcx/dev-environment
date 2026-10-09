@@ -26,5 +26,6 @@ if OS.mac?
   cask "claude-code"
   cask "codex"
   cask "ghostty"
+  cask "google-chrome"
   cask "docker-desktop"
 end
