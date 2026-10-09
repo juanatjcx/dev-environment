@@ -5,4 +5,8 @@ for brew_bin in /opt/homebrew/bin/brew /usr/local/bin/brew /home/linuxbrew/.linu
     break
   fi
 done
+# Homebrew .NET apphosts need an explicit runtime root.
+if [[ -n "${HOMEBREW_PREFIX:-}" && -x "$HOMEBREW_PREFIX/opt/dotnet/libexec/dotnet" ]]; then
+  export DOTNET_ROOT="${DOTNET_ROOT:-$HOMEBREW_PREFIX/opt/dotnet/libexec}"
+fi
 [[ -r "$HOME/.zprofile.local" ]] && source "$HOME/.zprofile.local"

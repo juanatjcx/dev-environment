@@ -59,6 +59,31 @@ elif (( $+commands[brew] )); then
   unset nvm_prefix
 fi
 
+# Follow project pins when changing directories; never install runtimes implicitly.
+load_project_node() {
+  (( $+functions[nvm] )) || return 0
+  local nvmrc selected
+  nvmrc="$(nvm_find_nvmrc)"
+  if [[ -n "$nvmrc" ]]; then
+    selected="$(nvm version "$(cat "$nvmrc")")"
+    if [[ "$selected" == N/A ]]; then
+      print -u2 "Node from $nvmrc is missing; run nvm install in that project."
+    elif [[ "$(nvm current)" != "$selected" ]]; then
+      nvm use --silent
+    fi
+  elif [[ "$(nvm current)" != "$(nvm version default)" ]]; then
+    nvm use --silent default
+  fi
+  return 0
+}
+autoload -Uz add-zsh-hook
+add-zsh-hook chpwd load_project_node
+load_project_node
+# Fuzzy history and file selection (installed with the baseline).
+if [[ -o zle && -t 0 ]] && (( $+commands[fzf] )); then
+  source <(fzf --zsh)
+fi
+
 alias repos='cd "$REPOS_HOME"'
 alias myrepos='cd "$MY_REPOS"'
 alias ll='ls -lah'

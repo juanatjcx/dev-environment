@@ -1,4 +1,4 @@
-" Small portable Vim setup; no external plugins.
+" Portable Vim setup; native packages installed by scripts/setup-vim.sh.
 set nocompatible
 syntax enable
 filetype plugin indent on
@@ -17,4 +17,46 @@ set confirm
 set shiftwidth=4
 set tabstop=4
 set expandtab
+
+set completeopt=menuone,noinsert,noselect
+let mapleader = " "
+let g:lsp_diagnostics_enabled = 1
+let g:lsp_diagnostics_echo_cursor = 1
+function! s:lsp_buffer() abort
+  setlocal omnifunc=lsp#complete
+  setlocal signcolumn=yes
+  nmap <buffer> gd <plug>(lsp-definition)
+  nmap <buffer> gr <plug>(lsp-references)
+  nmap <buffer> K <plug>(lsp-hover)
+  nmap <buffer> [g <plug>(lsp-previous-diagnostic)
+  nmap <buffer> ]g <plug>(lsp-next-diagnostic)
+  nmap <buffer> <leader>rn <plug>(lsp-rename)
+  nnoremap <buffer> <leader>f :LspDocumentFormat<CR>
+  nnoremap <buffer> <leader>ca :LspCodeAction<CR>
+endfunction
+augroup developer_lsp
+  autocmd!
+  autocmd User lsp_buffer_enabled call s:lsp_buffer()
+augroup END
+" Project rules take precedence; no automatic formatting on save.
+if filereadable(expand('~/.vimrc.local'))
+  source ~/.vimrc.local
+endif
 nnoremap <leader><space> :nohlsearch<CR>
+
+if executable('csharp-ls')
+  augroup developer_csharp
+    autocmd!
+    autocmd User lsp_setup call lsp#register_server({'name': 'csharp-ls', 'cmd': {info->['csharp-ls']}, 'allowlist': ['cs']})
+  augroup END
+endif
+
+" Debugger UI: F5 launch/continue, F9 breakpoint, F10/F11 step.
+let g:vimspector_enable_mappings = 'HUMAN'
+let g:vimspector_install_gadgets = ['vscode-js-debug']
+let g:vimspector_adapters = {
+      \ 'debugpy': {
+      \   'command': [expand('~/.local/share/developer-debugger/bin/python'), '-m', 'debugpy.adapter'],
+      \   'name': 'python'
+      \ }
+      \ }

@@ -1,4 +1,4 @@
-# Targeted install; also included in the desired macOS baseline.
+# Targeted container install; also included in the macOS baseline.
 # Start Docker Desktop once after installing it.
 if OS.mac?
   cask "docker-desktop"

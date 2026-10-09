@@ -43,7 +43,8 @@ commits. Shell installation copies files and backs up previous files under
 your other repositories or configure cloud credentials.
 
 The [root Brewfile](Brewfile) is the portable desired setup: the observed CLI tools
-plus explicit Git and zsh prerequisites. [The original Brewfile](inventory/Brewfile.macos)
+plus source navigation and uv. macOS uses its supplied Git and zsh; Homebrew Vim adds debugger support.
+Linux/WSL installs those tools explicitly. [The original Brewfile](inventory/Brewfile.macos)
 preserves the observed package selection, while [the version inventory](inventory/homebrew-versions.txt)
 records installed dependencies and versions for troubleshooting. These inventories
 are snapshots, not version locks. Homebrew installs available releases;
@@ -72,7 +73,7 @@ export EDITOR="vim"
 The tracked configuration retains your two-line developer prompt, git status,
 autosuggestions, syntax highlighting, directory jumping, 50,000 history entries,
 and arrow-key history search. It adds OS-aware plugins, user-cache storage,
-update reminders, nvm initialization, and explicit history widgets. Personal
+update reminders, nvm initialization, explicit history widgets, fzf integration, and automatic `.nvmrc` switching. Personal
 configuration belongs in `~/.zshrc.local` or `~/.zprofile.local`, never in tracked
 files. History ignores commands beginning with a space; this is convenience,
 not a credential protection mechanism.
@@ -122,5 +123,8 @@ Validation performed locally: Bash/zsh syntax, Ruby Brewfile syntax, isolated
 shell install/reinstall with backups, and interactive shell startup. Linux/WSL
 package installation requires verification on those systems.
 
-Bootstrap now initializes Node LTS and installs a minimal Vim configuration.
-See [container guidance](docs/containers.md) and [recovery/Xcode steps](docs/recovery.md).
+Bootstrap initializes Node LTS and installs Vim language tooling. See
+[the editor guide](docs/editor.md) and [Python workflow](docs/python.md).
+Docker Desktop is included in the macOS baseline and was verified locally on
+2026-10-04. See [container guidance](docs/containers.md) for installation provenance
+and checks, and [recovery/Xcode steps](docs/recovery.md).

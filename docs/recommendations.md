@@ -1,47 +1,43 @@
-# Recommended next steps
+# Developer workflow
 
-These are opt-in follow-ups, not software silently installed by the shell setup.
+The 2026-10-03 follow-up implements source navigation, project Node pins,
+Vim language tooling, and explicit Python tooling. Docker Desktop was installed
+on 2026-10-04 and is now part of the desired macOS baseline.
 
-1. **Choose project runtimes explicitly.** The captured Mac has Node 26.10.0 and
-   .NET SDK 10.0.401. Keep Homebrew Node for the captured global CLI tools; use
-   `nvm install --lts` for new projects, then `nvm use`, and commit an `.nvmrc`
-   with the chosen exact version. Existing projects may require other versions.
-   Commit package-manager lockfiles and use `npm ci`. For .NET, commit
-   [`global.json`](https://learn.microsoft.com/en-us/dotnet/core/tools/global-json)
-   with the intended SDK/roll-forward policy. Install missing SDKs explicitly.
-   The Homebrew nvm loader fixes the current missing initialization; upstream
-   [nvm does not support Homebrew installation](https://github.com/nvm-sh/nvm).
-   Consider migrating to upstream nvm if troubleshooting is needed. Do not remove
-   Homebrew Node blindly: global Homebrew tools can depend on it.
-2. **Add source navigation tools.** Run `brew bundle --file=Brewfile.optional`
-   for ripgrep, jq, and fzf. This is a small optional toolkit, not an expansion
-   of every shell plugin. Enable fzf's shell integration only if you want its
-   key bindings to replace the existing history search.
-3. **Use Vim.** The shell defaults to Vim and installs `shell/vimrc` with search,
-   completion, syntax highlighting, and filetype indentation. No external plugins
-   are required. The desired Brewfile includes current Vim; macOS's built-in Vim
-   works immediately. Keep language formatters and lint rules in each project.
-4. **Separate work and personal Git identities.** Use owner-directory-scoped
-   `includeIf` files, verified emails, and approved organization credentials.
-   Confirm with `git var GIT_AUTHOR_IDENT` inside each repository. Keep 1Password
-   for secrets; configure SSH signing/agent integration only if your workflow or
-   organization requires it.
-5. **Use Docker when a project needs containers.** See [the platform-specific container setup](containers.md). For repositories with databases or
-   platform-specific dependencies, consider a dev container and Compose services.
-   Install a container engine only when a project needs it; document its version
-   and startup requirements in that project. Do not install every language manager
-   preemptively. Python projects should use an explicit runtime and virtualenv;
-   the current Homebrew Python is a transitive dependency, not a tracked choice.
-6. **Check native Apple development separately.** Xcode.app exists, but the
-   active developer directory is `/Library/Developer/CommandLineTools`. This is
-   sufficient for many CLI builds. For Apple app work, select Xcode in its Settings
-   or deliberately use `sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer`,
-   complete first-launch setup, and install the project-required SDK/simulators.
-7. **Maintain recovery basics.** FileVault and automatic updates were verified enabled on this Mac; Time Machine needs a destination. See [the recovery checklist](recovery.md). Enable OS updates, disk encryption, and encrypted
-   backups. Push this repo to its remote and maintain a private account recovery
-   checklist. Never store recovery codes, API keys, SSH private keys, or shell
-   history in it.
+- **Node:** use `.nvmrc` in each Node project. Shell directory changes select
+  installed pins; missing versions print an instruction to run `nvm install`.
+  Outside pinned projects the shell returns to the nvm default. Existing CI
+  majors are preserved: jcxsoftware uses 22, Calor's website uses 20.
+  Review older majors separately rather than mixing upgrades into setup work.
+  Keep dependency lockfiles and use `npm ci`.
+- **.NET:** Calor already pins SDK 10.0.100 with `latestMinor` roll-forward,
+  which permits the installed 10.0.401 SDK. Preserve that existing policy.
+- **Editor:** see [Vim tooling](editor.md). EditorConfig files are added to
+  this repo and the two Node projects; existing source is not reformatted.
+- **Python:** see [uv workflow](python.md). Keep environments inside projects;
+  do not install application dependencies into Homebrew's Python.
+- **Containers:** Docker Desktop is installed on this Mac. Keep services and
+  container configuration scoped to the projects that require them; see
+  [container workflow](containers.md).
+- **Apple development:** full Xcode is selected on this Mac. Install the SDKs
+  and simulators required by the particular project.
+- **Git:** keep directory-scoped personal/work identities and
+  `user.useConfigOnly=true`; confirm the identity before a first commit.
 
-After setup, confirm `git --version`, `node --version`, `nvm --version`,
-`dotnet --list-sdks`, `gh auth status`, and the build/test commands of an actual
-project. Packages alone do not prove a project works.
+## Suggested project commands
+
+Keep the existing ecosystem commands and document them in each project's
+README: setup, development, validation, and formatting. Avoid adding a wrapper
+unless it removes real repetition. Examples from the current repositories:
+
+| Project | Setup | Development | Validation |
+| --- | --- | --- | --- |
+| jcxsoftware | `nvm install && npm ci` | `npm run dev` | `npm run check && npm run build` |
+| jcxsoftware/api | `nvm install && npm ci` | Project-specific Azure Functions host | `npm test` |
+| Calor website | `nvm install && npm ci` | `npm run dev` | `npm run build`, selected Playwright tests |
+| Calor compiler | Download Z3 assets per AGENTS.md, `dotnet restore` | Existing CLI/build workflow | Scoped `dotnet test tests/<Project>/` |
+
+A future doctor enhancement should report selected runtime versions, compare
+Node to `.nvmrc`, resolve the SDK through `global.json`, show Xcode selection,
+and check Docker only when a project requires it. These are proposals;
+project command wrappers and doctor changes are not part of this follow-up.

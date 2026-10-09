@@ -1,0 +1,12 @@
+Observed: 2026-10-04
+Architecture: Apple Silicon / arm64
+Application: /Applications/Docker.app
+Source: Docker.dmg fetched with brew fetch --cask docker-desktop; app copied directly
+Homebrew cask receipt: absent
+Docker Desktop: 4.93.0 (240920)
+Docker Engine/client: 29.8.1
+Docker Compose: 5.5.1
+Docker context: desktop-linux
+Shell CLI: ~/.docker/bin/docker
+Verification: docker version; docker compose version; docker run --rm hello-world
+Result: all passed; Linux ARM64 hello-world container ran successfully

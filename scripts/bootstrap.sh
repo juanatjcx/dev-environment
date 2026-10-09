@@ -19,3 +19,4 @@ clone_if_missing https://github.com/zsh-users/zsh-autosuggestions.git "$HOME/.oh
 clone_if_missing https://github.com/zsh-users/zsh-syntax-highlighting.git "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
 bash "$root/scripts/install-shell.sh"
 bash "$root/scripts/setup-node.sh"
+bash "$root/scripts/setup-vim.sh"
