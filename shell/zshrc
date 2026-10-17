@@ -35,6 +35,9 @@ path=("$HOME/.local/bin" $path)
 if [[ "$OSTYPE" == darwin* && -d /Applications/Docker.app/Contents/Resources/bin ]]; then
   path+=(/Applications/Docker.app/Contents/Resources/bin)
 fi
+# Homebrew gcloud-cli puts extra `gcloud components` binaries here.
+[[ -n "${HOMEBREW_PREFIX:-}" && -d "$HOMEBREW_PREFIX/share/google-cloud-sdk/bin" ]] &&
+  path+=("$HOMEBREW_PREFIX/share/google-cloud-sdk/bin")
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=50000
 SAVEHIST=50000

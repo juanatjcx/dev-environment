@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -uo pipefail
 missing=0
-for tool in git brew zsh node npm dotnet gh aws az firebase; do
+for tool in git brew zsh node npm dotnet gh aws az firebase gcloud; do
   if command -v "$tool" >/dev/null; then
     printf '%-10s %s\n' "$tool" "$(command -v "$tool")"
   else

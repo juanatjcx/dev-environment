@@ -28,4 +28,5 @@ if OS.mac?
   cask "ghostty"
   cask "google-chrome"
   cask "docker-desktop"
+  cask "gcloud-cli"
 end

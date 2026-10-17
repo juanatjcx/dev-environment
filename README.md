@@ -103,7 +103,7 @@ gh auth status
 
 The GitHub CLI provides [Git authentication setup](https://cli.github.com/manual/gh_auth).
 For your personal/work identities, run `bash scripts/setup-git.sh PERSONAL_EMAIL WORK_EMAIL`; see [accounts](docs/accounts.md). Select identities deliberately before your first commit. Authenticate
-AWS, Azure and Firebase only when needed, using your organization's approved
+AWS, Azure, Google Cloud and Firebase only when needed, using your organization's approved
 SSO/login workflow; never commit their credentials or copied home directories.
 
 ## Maintenance
@@ -140,3 +140,13 @@ was installed with Homebrew. Chrome updates itself, so `brew upgrade` usually
 skips it. To install it on an existing machine without rerunning bootstrap, run
 `brew install --cask google-chrome`. On Linux/WSL, install Chrome from Google's
 distro packages if needed.
+
+The Google Cloud CLI (`cask "gcloud-cli"`) was added to the macOS baseline on
+2026-10-17; Google Cloud SDK 589.0.0 (`gcloud`, `gsutil`, `bq`) was installed with
+Homebrew. Firebase CLI (`brew "firebase-cli"`) was already part of the baseline.
+To install gcloud on an existing machine, run `brew install --cask gcloud-cli`;
+on Linux/WSL, use [Google's package repositories](https://cloud.google.com/sdk/docs/install).
+Sign in with `gcloud auth login` and, for local application credentials,
+`gcloud auth application-default login`; use `firebase login` for Firebase.
+Components added with `gcloud components install` land in
+`$HOMEBREW_PREFIX/share/google-cloud-sdk/bin`, which the shell adds to `PATH`.
