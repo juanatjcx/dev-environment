@@ -35,6 +35,9 @@ machine; review [the recommendations](docs/recommendations.md) afterward.
 5. Configure directory-specific Git identities using [account setup](docs/accounts.md). Run
    `bash scripts/doctor.sh` and `nvm --version` in the new terminal.
 
+The scripts are executable bash scripts, so `./scripts/bootstrap.sh` works as
+well as `bash scripts/bootstrap.sh`.
+
 Bootstrap installs packages (and may upgrade existing packages), clones missing
 Oh My Zsh/plugin repositories, and installs shell files. It leaves existing plugin
 directories intact. Fresh plugin clones use current upstream defaults, not pinned
@@ -102,7 +105,7 @@ gh auth status
 ```
 
 The GitHub CLI provides [Git authentication setup](https://cli.github.com/manual/gh_auth).
-For your personal/work identities, run `bash scripts/setup-git.sh PERSONAL_EMAIL WORK_EMAIL`; see [accounts](docs/accounts.md). Select identities deliberately before your first commit. Authenticate
+For your personal/work identities, run `bash scripts/setup-git.sh PERSONAL_EMAIL WORK_EMAIL`; see [accounts](docs/accounts.md), which also covers separate Google Cloud and Firebase accounts. Select identities deliberately before your first commit. Authenticate
 AWS, Azure, Google Cloud and Firebase only when needed, using your organization's approved
 SSO/login workflow; never commit their credentials or copied home directories.
 

@@ -37,12 +37,12 @@ HOMEBREW_BUNDLE_CASK_SKIP=docker-desktop brew bundle check --verbose --file=Brew
 HOMEBREW_BUNDLE_CASK_SKIP=docker-desktop bash scripts/bootstrap.sh
 ```
 
-To bring the app under Homebrew later, run
-`brew install --cask --adopt docker-desktop` in an interactive terminal. Adoption
-only works when the installed app is identical to the cask's current version.
-The 2026-10-04 install is 4.93.0, and the cask had moved to 4.94.0 by
-2026-10-09, so adoption is expected to fail until the versions match. If it
-works, `brew bundle check` stops reporting Docker, and you can drop the skip
+To bring the app under Homebrew, run
+`brew install --cask --adopt docker-desktop` in an interactive terminal; it
+asks for your administrator password. The version check does not block it:
+on 2026-10-18 adoption of the 4.93.0 app accepted the 4.95.0 cask and stopped
+only because `sudo` had no terminal for the password. If it works,
+`brew bundle check` stops reporting Docker, and you can drop the skip
 variable. Docker Desktop updates itself either way. Macs that install Docker
 through bootstrap or `Brewfile.containers` get a normal receipt and are not
 affected. A manual DMG install, as described above, has the same issue.
