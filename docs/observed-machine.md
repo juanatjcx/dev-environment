@@ -51,7 +51,9 @@ were copied. See `inventory/` for the package snapshot.
 ## Google Cloud CLI — 2026-10-17
 
 - Installed the `gcloud-cli` cask: Google Cloud SDK 589.0.0, bq 2.1.40.
-  It runs on Homebrew's Python 3.14 (`/opt/homebrew/bin/python3.14`), and
+  `gcloud info` showed it running on Homebrew's Python 3.14
+  (`/opt/homebrew/bin/python3.14`). The cask depends on python@3.13 and its
+  gcloud virtualenv was absent, so a reinstall may switch interpreters.
   `gcloud` resolves to `/opt/homebrew/bin/gcloud`.
 - Firebase CLI 15.34.0 (`firebase-cli` formula) was already installed.
 - gcloud-cli is now included in the desired macOS baseline. No gcloud or Firebase

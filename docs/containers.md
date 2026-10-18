@@ -43,8 +43,9 @@ asks for your administrator password. The version check does not block it:
 on 2026-10-18 adoption of the 4.93.0 app accepted the 4.95.0 cask and stopped
 only because `sudo` had no terminal for the password. If it works,
 `brew bundle check` stops reporting Docker, and you can drop the skip
-variable. Homebrew then records the cask's version even though the app stays
-at its own version until Docker Desktop updates itself; that is harmless. Docker Desktop updates itself either way. Macs that install Docker
+variable. Homebrew then records the cask's version even though the app keeps
+its own version; that is harmless, because Docker Desktop updates itself
+either way. Macs that install Docker
 through bootstrap or `Brewfile.containers` get a normal receipt and are not
 affected. A manual DMG install, as described above, has the same issue.
 

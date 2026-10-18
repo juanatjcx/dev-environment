@@ -46,7 +46,8 @@ commits. Shell installation copies files and backs up previous files under
 your other repositories or configure cloud credentials.
 
 The [root Brewfile](Brewfile) is the portable desired setup: the observed CLI tools
-plus source navigation, uv, and the later additions described below. macOS uses its supplied Git and zsh; Homebrew Vim adds debugger support.
+plus source navigation and uv, with macOS-only casks added later (Chrome, Docker
+Desktop, gcloud; see below). macOS uses its supplied Git and zsh; Homebrew Vim adds debugger support.
 Linux/WSL installs those tools explicitly. [The original Brewfile](inventory/Brewfile.macos)
 preserves the observed package selection, while [the version inventory](inventory/homebrew-versions.txt)
 records installed dependencies and versions for troubleshooting. These inventories
@@ -119,6 +120,8 @@ SSO/login workflow; never commit their credentials or copied home directories.
   `brew bundle dump --file=inventory/Brewfile.macos --force` on macOS and
   `brew list --versions > inventory/homebrew-versions.txt`. Review the diff and
   update the portable Brewfile deliberately.
+- Self-updating casks (Chrome, Docker Desktop, gcloud-cli) are skipped by
+  `brew upgrade`; use `brew upgrade --cask --greedy <cask>` when needed.
 - On the captured Mac, `brew bundle check` reports `docker-desktop` as missing
   and bootstrap is expected to stop at the bundle step. Docker Desktop was installed without
   a Homebrew receipt. Run either command with
@@ -153,5 +156,7 @@ Sign in with `gcloud auth login` and, for local application credentials,
 `gcloud auth application-default login`; use `firebase login` for Firebase.
 Components added with `gcloud components install` land in
 `$HOMEBREW_PREFIX/share/google-cloud-sdk/bin`, which the shell adds to `PATH`.
-The cask updates itself, so `brew upgrade` skips it; update with
-`gcloud components update` or `brew upgrade --cask --greedy gcloud-cli`.
+The cask updates itself, so plain `brew upgrade` skips it. Update it with
+`brew upgrade --cask --greedy gcloud-cli`, which keeps Homebrew's recorded
+version current. `gcloud components update` also works, but Homebrew then still
+reports the old version, and a later cask upgrade may overwrite the updated SDK.
