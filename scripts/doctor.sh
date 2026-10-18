@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 set -uo pipefail
 missing=0
-for tool in git brew zsh node npm dotnet gh aws az firebase gcloud; do
+tools=(git brew zsh node npm dotnet gh aws az firebase)
+# gcloud-cli is a macOS cask; Linux/WSL installs it separately when needed.
+[[ "$(uname -s)" == Darwin ]] && tools+=(gcloud)
+for tool in "${tools[@]}"; do
   if command -v "$tool" >/dev/null; then
     printf '%-10s %s\n' "$tool" "$(command -v "$tool")"
   else

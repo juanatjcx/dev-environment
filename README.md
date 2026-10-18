@@ -6,7 +6,7 @@ machine; review [the recommendations](docs/recommendations.md) afterward.
 
 | Platform | CLI and shell | Desktop apps |
 | --- | --- | --- |
-| macOS | Homebrew + zsh + Oh My Zsh | Captured Homebrew casks |
+| macOS | Homebrew + zsh + Oh My Zsh | Captured and later-added Homebrew casks |
 | Linux | Homebrew + zsh + Oh My Zsh | Choose distro-supported apps manually |
 | Windows | Same Linux setup inside WSL2 | Windows Terminal and optional Windows apps |
 
@@ -46,7 +46,7 @@ commits. Shell installation copies files and backs up previous files under
 your other repositories or configure cloud credentials.
 
 The [root Brewfile](Brewfile) is the portable desired setup: the observed CLI tools
-plus source navigation and uv. macOS uses its supplied Git and zsh; Homebrew Vim adds debugger support.
+plus source navigation, uv, and the later additions described below. macOS uses its supplied Git and zsh; Homebrew Vim adds debugger support.
 Linux/WSL installs those tools explicitly. [The original Brewfile](inventory/Brewfile.macos)
 preserves the observed package selection, while [the version inventory](inventory/homebrew-versions.txt)
 records installed dependencies and versions for troubleshooting. These inventories
@@ -153,3 +153,5 @@ Sign in with `gcloud auth login` and, for local application credentials,
 `gcloud auth application-default login`; use `firebase login` for Firebase.
 Components added with `gcloud components install` land in
 `$HOMEBREW_PREFIX/share/google-cloud-sdk/bin`, which the shell adds to `PATH`.
+The cask updates itself, so `brew upgrade` skips it; update with
+`gcloud components update` or `brew upgrade --cask --greedy gcloud-cli`.

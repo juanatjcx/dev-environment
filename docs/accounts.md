@@ -54,7 +54,8 @@ Switching configurations does not change them; run that login again after switch
 
 The Firebase CLI keeps its own sign-ins. Add a second account with
 `firebase login:add`, then run `firebase login:use <email>` inside a project
-directory to select that account for that project.
+directory to select that account for that project. Outside a Firebase project
+directory, the same command changes the global default account instead.
 
 Credentials stay in `~/.config/gcloud` and the Firebase CLI's own config. Never
 commit or copy them into this repo.
