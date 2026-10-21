@@ -122,11 +122,10 @@ SSO/login workflow; never commit their credentials or copied home directories.
   update the portable Brewfile deliberately.
 - Self-updating casks (Chrome, Docker Desktop, gcloud-cli) are skipped by
   `brew upgrade`; use `brew upgrade --cask --greedy <cask>` when needed.
-- On the captured Mac, `brew bundle check` reports `docker-desktop` as missing
-  and bootstrap is expected to stop at the bundle step. Docker Desktop was installed without
-  a Homebrew receipt. Run either command with
-  `HOMEBREW_BUNDLE_CASK_SKIP=docker-desktop`; see
-  [the known issue](docs/containers.md#known-issue-no-homebrew-cask-receipt).
+- A Docker Desktop copied in manually has no Homebrew receipt, so
+  `brew bundle check` and bootstrap fail on it. Adopt it rather than reinstalling;
+  see [adopting a manually installed app](docs/containers.md#adopting-a-manually-installed-app).
+  The captured Mac was adopted on 2026-10-21.
 - Avoid `brew bundle cleanup --force` with this repo; unrelated packages may
   be removed. The bootstrap never performs cleanup.
 
@@ -136,8 +135,8 @@ package installation requires verification on those systems.
 
 Bootstrap initializes Node LTS and installs Vim language tooling. See
 [the editor guide](docs/editor.md) and [Python workflow](docs/python.md).
-Docker Desktop is included in the macOS baseline and was verified locally on
-2026-10-04. See [container guidance](docs/containers.md) for installation provenance
+Docker Desktop is included in the macOS baseline; it was verified locally on
+2026-10-04 and brought under Homebrew on 2026-10-21. See [container guidance](docs/containers.md) for installation provenance
 and checks, and [recovery/Xcode steps](docs/recovery.md).
 
 Google Chrome (`cask "google-chrome"`) was added to the macOS baseline on

@@ -10,3 +10,10 @@ Docker context: desktop-linux
 Shell CLI: ~/.docker/bin/docker
 Verification: docker version; docker compose version; docker run --rm hello-world
 Result: all passed; Linux ARM64 hello-world container ran successfully
+
+Updated: 2026-10-21
+Docker Desktop: 4.96.1 (self-updated)
+Homebrew cask receipt: present, 4.96.1,244132 (adopted with brew install --cask --adopt)
+Docker client: 29.9.2
+Docker Compose: v5.6.0
+Verification: brew bundle check passes; engine not running, docker run not re-verified

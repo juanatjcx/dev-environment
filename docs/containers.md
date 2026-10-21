@@ -10,44 +10,48 @@ run `brew bundle --file=Brewfile.containers`, then open Docker Desktop and compl
 first launch. Homebrew's CLI links and post-install Kubernetes link can require
 an administrator password, so run this command in an interactive terminal.
 
-On the current Mac, Docker Desktop was installed successfully on 2026-10-04 by
-copying the application from the Homebrew-fetched Docker DMG into `/Applications`.
-The app is running and all checks below passed. The separate
-[Docker inventory](../inventory/docker-desktop.txt) records this installation.
-For manual installation on another Mac, mount the official Apple Silicon DMG,
-copy `Docker.app` into Applications, launch it, and complete first launch.
+On the current Mac, Docker Desktop was first installed on 2026-10-04 by copying
+the application from the Homebrew-fetched Docker DMG into `/Applications`. The
+separate [Docker inventory](../inventory/docker-desktop.txt) records that
+installation and its later adoption by Homebrew. For manual installation on
+another Mac, mount the official Apple Silicon DMG, copy `Docker.app` into
+Applications, launch it, and complete first launch.
 
-### Known issue: no Homebrew cask receipt
+### Adopting a manually installed app
 
-Because the app was copied rather than installed by `brew install --cask`,
-Homebrew has no record of it. This is expected on this Mac. It is not a broken
-installation. It has two effects:
+A copied app has no Homebrew cask receipt, so `brew bundle check` reports
+`Cask docker-desktop needs to be installed or updated.` and bootstrap stops at
+the bundle step. Do not delete or uninstall Docker Desktop to fix this. Bring
+the existing app under Homebrew instead:
 
-- `brew bundle check --file=Brewfile` fails with
-  `Cask docker-desktop needs to be installed or updated.`
-- `bash scripts/bootstrap.sh` tries to install the cask. Homebrew is expected to refuse
-  to overwrite the existing `/Applications/Docker.app`, and because bootstrap uses
-  `set -e`, it would stop before the shell setup steps.
+1. In System Settings → Privacy & Security → App Management, allow your
+   terminal app, then quit and reopen it. Without this, macOS blocks even
+   `sudo chmod` inside `Docker.app` with `Operation not permitted`.
+2. In that terminal (not through Claude Code's `!` prefix, which has no
+   terminal for the password prompt), run
+   `brew install --cask --adopt docker-desktop` and enter your password.
 
-Do not delete or reinstall Docker Desktop just to satisfy these checks. On this
-Mac, skip the cask when running bundle commands:
+Adoption keeps the existing app and data. The version check did not block it
+here: on 2026-10-18 it accepted a 4.93.0 app against the 4.95.0 cask. If adoption
+cannot work, `brew install --cask --force docker-desktop` replaces only the
+app; images, containers and volumes stay in `~/Library/Containers/com.docker.docker`.
+Never use Docker Desktop's Troubleshoot → Uninstall or `brew uninstall --zap`
+for this, because both delete that data.
+
+Until a Mac is adopted, skip the cask when running bundle commands:
 
 ```sh
 HOMEBREW_BUNDLE_CASK_SKIP=docker-desktop brew bundle check --verbose --file=Brewfile
 HOMEBREW_BUNDLE_CASK_SKIP=docker-desktop bash scripts/bootstrap.sh
 ```
 
-To bring the app under Homebrew, run
-`brew install --cask --adopt docker-desktop` in an interactive terminal; it
-asks for your administrator password. The version check does not block it:
-on 2026-10-18 adoption of the 4.93.0 app accepted the 4.95.0 cask and stopped
-only because `sudo` had no terminal for the password. If it works,
-`brew bundle check` stops reporting Docker, and you can drop the skip
-variable. Homebrew then records the cask's version even though the app keeps
-its own version; that is harmless, because Docker Desktop updates itself
-either way. Macs that install Docker
-through bootstrap or `Brewfile.containers` get a normal receipt and are not
-affected. A manual DMG install, as described above, has the same issue.
+The current Mac was adopted on 2026-10-21 and no longer needs the skip
+variable. Macs that install Docker through bootstrap or `Brewfile.containers`
+get a normal receipt and are not affected.
+
+Docker Desktop may append its own block to `~/.zprofile` that adds
+`~/.docker/bin` to `PATH`. It is redundant with the tracked zshrc, and
+`scripts/install-shell.sh` replaces `~/.zprofile` without it.
 
 Docker Desktop can also install CLI tools in the user directory `~/.docker/bin`;
 the shell supports this directory and the bundled CLI. Windows: follow the [official Desktop installer](https://docs.docker.com/desktop/setup/install/windows-install/)

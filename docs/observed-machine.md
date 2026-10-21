@@ -58,3 +58,15 @@ were copied. See `inventory/` for the package snapshot.
 - Firebase CLI 15.34.0 (`firebase-cli` formula) was already installed.
 - gcloud-cli is now included in the desired macOS baseline. No gcloud or Firebase
   credentials or configurations were captured.
+
+## Docker Desktop adopted by Homebrew — 2026-10-21
+
+- Docker Desktop had updated itself to 4.96.1 (`Info.plist` modified 04:59).
+- `brew install --cask --adopt docker-desktop` succeeded at 18:50 after the
+  terminal was allowed App Management access. The cask receipt is 4.96.1,244132,
+  and the Caskroom entry is a symlink to the existing `/Applications/Docker.app`.
+- `brew bundle check --file=Brewfile` passes without `HOMEBREW_BUNDLE_CASK_SKIP`.
+- Docker CLI 29.9.2 and Compose v5.6.0 resolve through `~/.docker/bin`. The
+  engine was not running at the check, so `docker run` was not re-verified.
+- Docker Desktop had added a `~/.docker/bin` PATH block to `~/.zprofile` on
+  2026-10-19; the tracked zprofile does not include it.
