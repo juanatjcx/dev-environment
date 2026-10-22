@@ -118,11 +118,12 @@ SSO/login workflow; never commit their credentials or copied home directories.
   `scripts/bootstrap.sh`. `--greedy` also upgrades apps that update themselves
   (most casks here, such as Chrome, Docker Desktop and gcloud), which a plain
   `brew upgrade` skips. Bootstrap then fast-forwards Oh My Zsh and the zsh and
-  Vim plugin checkouts, installs the latest Node LTS, and updates the Vim
-  language servers and debugger. It also replaces `~/.zshrc`, `~/.zprofile`,
-  `~/.vimrc` and the Oh My Zsh `developer` theme with the repo's copies,
-  backing up the old ones under `~/.dev-environment-backup.*`; keep local
-  changes in the `*.local` files. Old backups can be deleted.
+  Vim plugin checkouts, installs the latest Node LTS, updates the Vim language
+  servers and debugger, and updates the [Claude Code
+  plugins](#claude-code-plugins). It also replaces `~/.zshrc`, `~/.zprofile`,
+  `~/.vimrc` and the Oh My Zsh `developer` theme with the repo's copies, backing
+  up the old ones under `~/.dev-environment-backup.*`; keep local changes in the
+  `*.local` files. Old backups can be deleted.
 - Plugin directories installed without Git are not checkouts, so bootstrap
   leaves them as they are; replace them with a fresh clone to keep them current.
 - To add a tool, install it with Homebrew and add it to the Brewfile.
