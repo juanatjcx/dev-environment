@@ -40,6 +40,11 @@ recommendations](docs/recommendations.md) afterward.
 5. Configure directory-specific Git identities using [account setup](docs/accounts.md). Run
    `bash scripts/doctor.sh` and `nvm --version` in the new terminal.
 
+`doctor.sh` fails when a tool or Brewfile entry is missing. It also checks the
+projects under `~/repos` (Node pins, .NET SDK pins, Docker when a project uses
+it), the selected Xcode and the Claude Code plugins, and prints a warning for
+each problem without failing.
+
 The scripts are executable bash scripts, so `./scripts/bootstrap.sh` works as
 well as `bash scripts/bootstrap.sh`.
 

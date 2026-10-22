@@ -12,7 +12,7 @@ Web and Python language servers are installed in
 project npm dependencies. Server wrappers use the Node default selected at
 installation, so older project runtimes do not break editor tooling. Rerun
 `setup-vim.sh` to update the editor tooling to the latest release (bootstrap
-runs it; see the README's Maintenance section). TypeScript is the
+runs it; see [Maintenance](../README.md#maintenance)). TypeScript is the
 exception: it stays on the newest 6.x, because TypeScript 7 no longer includes
 the `tsserver` that typescript-language-server uses. This covers
 TypeScript/JavaScript, Svelte, HTML, CSS, JSON, ESLint, and Python. C# uses
