@@ -175,13 +175,15 @@ install at user scope, as `plugin@marketplace`, and
 [`claude/marketplaces.txt`](claude/marketplaces.txt) lists the extra
 marketplaces they come from. Bootstrap runs `scripts/setup-claude.sh`, which
 adds missing marketplaces, installs missing plugins and updates installed ones
-to the latest version. It skips everything if Claude Code is not installed, and
-it never auto-approves a plugin that runs its own setup command, so you may be
-asked to confirm one. Restart Claude Code to load updates.
+to the latest version. It keeps going past a failed plugin and reports the
+failure at the end. It never auto-approves a plugin that runs its own setup
+command, so run bootstrap in a terminal, where it can ask you to confirm one.
+Restart Claude Code to load updates. On Linux/WSL, install Claude Code yourself
+first; bootstrap skips plugins until `claude` is on `PATH`.
 
-To add a plugin, install it with `claude plugin install <plugin@marketplace>` and
-add the same line to `claude/plugins.txt`. The script does not uninstall plugins
-missing from the list. Plugins provided by your claude.ai account (for example,
-product-management or engineering) sync when you sign in and are not listed.
-The rest of `~/.claude/settings.json` (theme and other preferences) is personal
-and stays out of this repo.
+To add a plugin, install it with `claude plugin install <plugin@marketplace>`
+and add the same line to `claude/plugins.txt`. The script does not uninstall
+plugins missing from the list. Plugins provided by your claude.ai account (for
+example, product-management or engineering) sync when you sign in and are not
+listed. The rest of `~/.claude/settings.json` (theme and other preferences) is
+personal and stays out of this repo.
