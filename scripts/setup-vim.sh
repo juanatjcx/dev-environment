@@ -59,8 +59,10 @@ python_version="$(uv python list --managed-python --output-format json |
 # Build beside the current environment and swap only after debugpy imports, so a
 # failed download keeps the working debugger.
 debugger="$HOME/.local/share/developer-debugger"
+# Restore the previous environment if an earlier run stopped mid-swap.
+[[ -e "$debugger" || ! -e "$debugger.old" ]] || mv "$debugger.old" "$debugger"
 rm -rf "$debugger.new"
-uv venv --quiet --managed-python --python "$python_version" "$debugger.new"
+uv venv --quiet --relocatable --managed-python --python "$python_version" "$debugger.new"
 uv pip install --python "$debugger.new/bin/python" --upgrade debugpy
 "$debugger.new/bin/python" -c 'import debugpy.adapter'
 rm -rf "$debugger.old"

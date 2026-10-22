@@ -1,12 +1,12 @@
 # Development environment
 
 Personal machine setup for macOS, Linux, and Windows (WSL2). Tools install at
-their latest release, with three exceptions: Node uses the latest LTS, the Vim
+their latest release, except that nvm's default Node is the latest LTS, the Vim
 tooling keeps TypeScript on 6.x, and the Node debug adapter follows Vimspector's
-own choice (see [the editor guide](docs/editor.md)). To update, run
-`brew update && brew upgrade --greedy` and rerun `scripts/setup-vim.sh`. This is
-a development baseline, not a full machine backup: apps installed outside the
-Brewfile are not covered. Start here on a new machine; review [the
+own choice (see [the editor guide](docs/editor.md)). See
+[Maintenance](#maintenance) to update everything. This is a development
+baseline, not a full machine backup: apps installed outside the Brewfile are not
+covered. Start here on a new machine; review [the
 recommendations](docs/recommendations.md) afterward.
 
 | Platform | CLI and shell | Desktop apps |
@@ -44,8 +44,8 @@ The scripts are executable bash scripts, so `./scripts/bootstrap.sh` works as
 well as `bash scripts/bootstrap.sh`.
 
 Bootstrap installs packages (and may upgrade existing packages), clones missing
-Oh My Zsh/plugin repositories, and installs shell files. It leaves existing plugin
-directories intact. Fresh plugin clones use current upstream defaults, not pinned
+Oh My Zsh/plugin repositories and fast-forwards existing Git checkouts of them,
+and installs shell files. Clones use current upstream defaults, not pinned
 commits. Shell installation copies files and backs up previous files under
 `~/.dev-environment-backup.*`; rerun it after editing this repo. It does not clone
 your other repositories or configure cloud credentials.
@@ -114,12 +114,14 @@ SSO/login workflow; never commit their credentials or copied home directories.
 
 ## Maintenance
 
-- Update everything with `brew update && brew upgrade --greedy`. `--greedy`
-  also upgrades apps that update themselves (most casks here, such as Chrome,
-  Docker Desktop and gcloud), which a plain `brew upgrade` skips.
-- Run `omz update`; update external plugins separately if they are Git clones.
-  Plugin directories installed without Git are not standalone checkouts, so
-  do not assume `git pull` there will update them.
+- Update everything with `brew update && brew upgrade --greedy`, then rerun
+  `scripts/bootstrap.sh`. `--greedy` also upgrades apps that update themselves
+  (most casks here, such as Chrome, Docker Desktop and gcloud), which a plain
+  `brew upgrade` skips. Bootstrap then fast-forwards Oh My Zsh and the zsh and
+  Vim plugin checkouts, installs the latest Node LTS, and updates the Vim
+  language servers and debugger.
+- Plugin directories installed without Git are not checkouts, so bootstrap
+  leaves them as they are; replace them with a fresh clone to keep them current.
 - To add a tool, install it with Homebrew and add it to the Brewfile.
 - A Docker Desktop copied in manually has no Homebrew receipt, so
   `brew bundle check` fails on it and bootstrap is expected to stop. Adopt it
