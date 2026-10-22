@@ -104,7 +104,7 @@ else
       sleep 1
     done
     if kill -0 "$pid" 2>/dev/null; then
-      kill "$pid" 2>/dev/null
+      kill -9 "$pid" 2>/dev/null
       wait "$pid" 2>/dev/null
       warn 'Docker engine did not answer within 10 seconds.'
     elif wait "$pid"; then
@@ -121,16 +121,16 @@ if ! command -v claude >/dev/null; then
 elif ! command -v jq >/dev/null; then
   warn 'jq is missing, so Claude Code plugins were not checked.'
 elif ! plugins="$(claude plugin list --json 2>/dev/null |
-  jq -r '.[] | select(.scope == "user") | "\(.id) \(.enabled)"')"; then
+  jq -r '.[] | select(.scope == "user") | "\(.id) \(.enabled // false)"')"; then
   warn 'Could not list Claude Code plugins.'
 else
   count=0
   while read -r plugin; do
     count=$((count + 1))
-    if grep -qxF "$plugin true" <<<"$plugins"; then
+    if grep -qxF -e "$plugin true" <<<"$plugins"; then
       :
-    elif grep -qxF "$plugin false" <<<"$plugins"; then
-      warn "$plugin is disabled; run claude plugin enable $plugin."
+    elif grep -qxF -e "$plugin false" <<<"$plugins"; then
+      warn "$plugin is disabled; run claude plugin enable --scope user $plugin."
     else
       warn "$plugin is not installed; run scripts/setup-claude.sh."
     fi
