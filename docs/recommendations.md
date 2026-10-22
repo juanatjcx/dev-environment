@@ -1,8 +1,7 @@
 # Developer workflow
 
-The 2026-10-03 follow-up implements source navigation, project Node pins,
-Vim language tooling, and explicit Python tooling. Docker Desktop was installed
-on 2026-10-04 and is now part of the desired macOS baseline.
+This setup provides source navigation, project Node pins, Vim language
+tooling, explicit Python tooling, and Docker Desktop on macOS.
 
 - **Node:** use `.nvmrc` in each Node project. Shell directory changes select
   installed pins; missing versions print an instruction to run `nvm install`.
@@ -10,8 +9,8 @@ on 2026-10-04 and is now part of the desired macOS baseline.
   majors are preserved: jcxsoftware uses 22, Calor's website uses 20.
   Review older majors separately rather than mixing upgrades into setup work.
   Keep dependency lockfiles and use `npm ci`.
-- **.NET:** Calor already pins SDK 10.0.100 with `latestMinor` roll-forward,
-  which permits the installed 10.0.401 SDK. Preserve that existing policy.
+- **.NET:** Calor pins SDK 10.0.100 with `latestMinor` roll-forward, so newer
+  10.0 SDKs from Homebrew work. Preserve that existing policy.
 - **Editor:** see [Vim tooling](editor.md). EditorConfig files are added to
   this repo and the two Node projects; existing source is not reformatted.
 - **Python:** see [uv workflow](python.md). Keep environments inside projects;

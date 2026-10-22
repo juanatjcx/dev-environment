@@ -9,9 +9,8 @@ in your password manager, not this repository.
 
 ## Xcode
 
-Xcode 27.0 (27A266a) is installed and selected at
-`/Applications/Xcode.app/Contents/Developer`; `xcodebuild -version` verified this
-after the user completed setup on 2026-10-02. For a new Apple development machine:
+On this Mac, Xcode is installed and selected at
+`/Applications/Xcode.app/Contents/Developer`. For a new Apple development machine:
 
 1. Open Xcode and complete first-launch components and license prompts.
 2. In Xcode → Settings → Locations, select Xcode for Command Line Tools; or run

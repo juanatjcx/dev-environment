@@ -10,19 +10,16 @@ run `brew bundle --file=Brewfile.containers`, then open Docker Desktop and compl
 first launch. Homebrew's CLI links and post-install Kubernetes link can require
 an administrator password, so run this command in an interactive terminal.
 
-On the current Mac, Docker Desktop was first installed on 2026-10-04 by copying
-the application from the Homebrew-fetched Docker DMG into `/Applications`. The
-separate [Docker inventory](../inventory/docker-desktop.txt) records that
-installation and its later adoption by Homebrew. For manual installation on
-another Mac, mount the official Apple Silicon DMG, copy `Docker.app` into
-Applications, launch it, and complete first launch.
+For a manual installation, mount the official Apple Silicon DMG, copy
+`Docker.app` into Applications, launch it, and complete first launch. Then
+adopt it into Homebrew as described below.
 
 ### Adopting a manually installed app
 
 A copied app has no Homebrew cask receipt, so `brew bundle check` reports
 `Cask docker-desktop needs to be installed or updated.`, and bootstrap is
-expected to stop at the bundle step. Do not delete or uninstall Docker Desktop to fix this. Bring
-the existing app under Homebrew instead:
+expected to stop at the bundle step. Do not delete or uninstall Docker Desktop
+to fix this. Bring the existing app under Homebrew instead:
 
 1. In System Settings → Privacy & Security → App Management, allow your
    terminal app, then quit and reopen it. Without this, macOS blocks even
@@ -31,15 +28,12 @@ the existing app under Homebrew instead:
    and enter your password. A non-interactive shell, such as Claude Code's `!`
    prefix, cannot show the password prompt and fails.
 
-Adoption keeps the existing app and data. On 2026-10-18 an attempt with a
-4.93.0 app against the 4.95.0 cask passed the version check (the cask is
-`auto_updates`) and stopped only at the `sudo` prompt. The 2026-10-21 adoption
-that succeeded had matching versions. If adoption cannot work,
+Adoption keeps the existing app and data. If adoption cannot work,
 `brew install --cask --force docker-desktop` quits Docker, replaces the app and
 reinstalls its helpers; images, containers and volumes stay in
-`~/Library/Containers/com.docker.docker`.
-Never use Docker Desktop's Troubleshoot → Uninstall or `brew uninstall --zap`
-for this, because both delete that data.
+`~/Library/Containers/com.docker.docker`. Never use Docker Desktop's
+Troubleshoot → Uninstall or `brew uninstall --zap` for this, because both
+delete that data.
 
 Until a Mac is adopted, skip the cask when running bundle commands:
 
@@ -48,9 +42,8 @@ HOMEBREW_BUNDLE_CASK_SKIP=docker-desktop brew bundle check --verbose --file=Brew
 HOMEBREW_BUNDLE_CASK_SKIP=docker-desktop bash scripts/bootstrap.sh
 ```
 
-The current Mac was adopted on 2026-10-21 and no longer needs the skip
-variable. Macs that install Docker through bootstrap or `Brewfile.containers`
-get a normal receipt and are not affected.
+Once adopted, drop the skip variable. Macs that install Docker through
+bootstrap or `Brewfile.containers` get a normal receipt and are not affected.
 
 ### Docker CLI paths
 

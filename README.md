@@ -1,12 +1,12 @@
 # Development environment
 
-Personal machine setup for macOS, Linux, and Windows (WSL2). The package baseline
-was captured on **2026-10-02** from an Apple Silicon Mac. Start here on a new
+Personal machine setup for macOS, Linux, and Windows (WSL2). It installs the
+latest release of every tool; nothing is pinned here. Start here on a new
 machine; review [the recommendations](docs/recommendations.md) afterward.
 
 | Platform | CLI and shell | Desktop apps |
 | --- | --- | --- |
-| macOS | Homebrew + zsh + Oh My Zsh | Captured and later-added Homebrew casks |
+| macOS | Homebrew + zsh + Oh My Zsh | Homebrew casks in the Brewfile |
 | Linux | Homebrew + zsh + Oh My Zsh | Choose distro-supported apps manually |
 | Windows | Same Linux setup inside WSL2 | Windows Terminal and optional Windows apps |
 
@@ -45,15 +45,12 @@ commits. Shell installation copies files and backs up previous files under
 `~/.dev-environment-backup.*`; rerun it after editing this repo. It does not clone
 your other repositories or configure cloud credentials.
 
-The [root Brewfile](Brewfile) is the portable desired setup: the observed CLI tools
-plus source navigation and uv, with macOS-only casks added later (Chrome, Docker
-Desktop, gcloud, Raspberry Pi Imager; see below). macOS uses its supplied Git and zsh; Homebrew Vim adds debugger support.
-Linux/WSL installs those tools explicitly. [The original Brewfile](inventory/Brewfile.macos)
-preserves the observed package selection, while [the version inventory](inventory/homebrew-versions.txt)
-records installed dependencies and versions for troubleshooting. These inventories
-are snapshots, not version locks. Homebrew installs available releases;
-[Homebrew's version model](https://docs.brew.sh/FAQ) does not guarantee arbitrary
-historical versions. Pin runtimes and dependencies inside individual projects.
+The [root Brewfile](Brewfile) is the single list of what gets installed: the CLI
+tools shared by every platform, plus [macOS apps](#macos-apps) as casks. macOS
+uses its supplied Git and zsh; Homebrew Vim adds debugger support. Linux/WSL
+installs Git and zsh explicitly. Homebrew always installs the current release.
+Pin runtimes and dependencies inside individual projects instead (`.nvmrc`,
+`global.json`, lockfiles).
 
 ## Shell and repositories
 
@@ -112,20 +109,17 @@ SSO/login workflow; never commit their credentials or copied home directories.
 
 ## Maintenance
 
-- Review `brew outdated`, then run `brew update` and `brew upgrade` when ready.
+- Update everything with `brew update && brew upgrade --greedy`. `--greedy`
+  also upgrades apps that update themselves (Chrome, Docker Desktop, gcloud),
+  which a plain `brew upgrade` skips.
 - Run `omz update`; update external plugins separately if they are Git clones.
-  Existing plugin directories on the captured machine are not standalone Git
-  checkouts, so do not assume `git pull` there will update them.
-- To refresh the observed snapshot, run
-  `brew bundle dump --file=inventory/Brewfile.macos --force` on macOS and
-  `brew list --versions > inventory/homebrew-versions.txt`. Review the diff and
-  update the portable Brewfile deliberately.
-- Self-updating casks (Chrome, Docker Desktop, gcloud-cli) are skipped by
-  `brew upgrade`; use `brew upgrade --cask --greedy <cask>` when needed.
+  Plugin directories on the original Mac are not standalone Git checkouts, so
+  do not assume `git pull` there will update them.
+- To add a tool, install it with Homebrew and add it to the Brewfile.
 - A Docker Desktop copied in manually has no Homebrew receipt, so
-  `brew bundle check` fails on it and bootstrap is expected to stop. Adopt it rather than reinstalling;
-  see [adopting a manually installed app](docs/containers.md#adopting-a-manually-installed-app).
-  The captured Mac was adopted on 2026-10-21.
+  `brew bundle check` fails on it and bootstrap is expected to stop. Adopt it
+  rather than reinstalling; see
+  [adopting a manually installed app](docs/containers.md#adopting-a-manually-installed-app).
 - Avoid `brew bundle cleanup --force` with this repo; unrelated packages may
   be removed. The bootstrap never performs cleanup.
 
@@ -134,37 +128,31 @@ shell install/reinstall with backups, and interactive shell startup. Linux/WSL
 package installation requires verification on those systems.
 
 Bootstrap initializes Node LTS and installs Vim language tooling. See
-[the editor guide](docs/editor.md) and [Python workflow](docs/python.md).
-Docker Desktop is included in the macOS baseline; it was verified locally on
-2026-10-04 and brought under Homebrew on 2026-10-21. See
-[container guidance](docs/containers.md) for installation provenance and checks,
-and [recovery/Xcode steps](docs/recovery.md).
+[the editor guide](docs/editor.md), [Python workflow](docs/python.md),
+[container guidance](docs/containers.md), and [recovery/Xcode steps](docs/recovery.md).
 
-Google Chrome (`cask "google-chrome"`) was added to the macOS baseline on
-2026-10-09 for web development and browser testing; Google Chrome 155.0.8059.40
-was installed with Homebrew. Chrome updates itself, so `brew upgrade` usually
-skips it. To install it on an existing machine without rerunning bootstrap, run
-`brew install --cask google-chrome`. On Linux/WSL, install Chrome from Google's
-distro packages if needed.
+## macOS apps
 
-The Google Cloud CLI (`cask "gcloud-cli"`) was added to the macOS baseline on
-2026-10-17; Google Cloud SDK 589.0.0 (`gcloud`, `gsutil`, `bq`) was installed with
-Homebrew. Firebase CLI (`brew "firebase-cli"`) was already part of the baseline.
-To install gcloud on an existing machine, run `brew install --cask gcloud-cli`;
-on Linux/WSL, use [Google's package repositories](https://cloud.google.com/sdk/docs/install).
-Sign in with `gcloud auth login` and, for local application credentials,
-`gcloud auth application-default login`; use `firebase login` for Firebase.
-Components added with `gcloud components install` land in
-`$HOMEBREW_PREFIX/share/google-cloud-sdk/bin`, which the shell adds to `PATH`.
-The cask updates itself, so plain `brew upgrade` skips it. Update it with
-`brew upgrade --cask --greedy gcloud-cli`, which keeps Homebrew's recorded
-version current. `gcloud components update` also works, but Homebrew then still
-reports the old version, and a later cask upgrade may overwrite the updated SDK.
+The Brewfile installs these casks on macOS only. To add one to an existing Mac
+without rerunning bootstrap, run `brew install --cask <name>`.
 
-Raspberry Pi Imager (`cask "raspberry-pi-imager"`) is in the macOS baseline for
-writing Raspberry Pi OS and other images to microSD cards and USB drives. To
-install it on an existing machine, run `brew install --cask raspberry-pi-imager`;
-`brew upgrade` keeps it current. On Linux/WSL, use the
-[official download](https://www.raspberrypi.com/software/) or your distribution's
-package; WSL usually cannot write to removable drives, so image cards from
-Windows instead.
+- **Docker Desktop** (`docker-desktop`): containers; see
+  [container guidance](docs/containers.md).
+- **Google Chrome** (`google-chrome`): web development and browser testing. On
+  Linux/WSL, install Chrome from Google's distro packages if needed.
+- **Google Cloud CLI** (`gcloud-cli`): `gcloud`, `gsutil` and `bq`. On Linux/WSL,
+  use [Google's package repositories](https://cloud.google.com/sdk/docs/install).
+  Sign in with `gcloud auth login` and, for local application credentials,
+  `gcloud auth application-default login`. The Firebase CLI (`firebase-cli`) is
+  a formula, installed on every platform; sign in with `firebase login`.
+  Components added with `gcloud components install` land in
+  `$HOMEBREW_PREFIX/share/google-cloud-sdk/bin`, which the shell adds to `PATH`.
+  Update with `brew upgrade --greedy` rather than `gcloud components update`, so
+  Homebrew's record stays in step and a later cask upgrade does not overwrite
+  the SDK.
+- **Raspberry Pi Imager** (`raspberry-pi-imager`): writes Raspberry Pi OS and
+  other images to microSD cards and USB drives. On Linux, use the
+  [official download](https://www.raspberrypi.com/software/) or your
+  distribution's package; WSL usually cannot write to removable drives, so image
+  cards from Windows instead.
+- **Others**: 1Password, ChatGPT, Claude, Claude Code, Codex and Ghostty.
