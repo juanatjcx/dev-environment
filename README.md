@@ -47,7 +47,7 @@ your other repositories or configure cloud credentials.
 
 The [root Brewfile](Brewfile) is the portable desired setup: the observed CLI tools
 plus source navigation and uv, with macOS-only casks added later (Chrome, Docker
-Desktop, gcloud; see below). macOS uses its supplied Git and zsh; Homebrew Vim adds debugger support.
+Desktop, gcloud, Raspberry Pi Imager; see below). macOS uses its supplied Git and zsh; Homebrew Vim adds debugger support.
 Linux/WSL installs those tools explicitly. [The original Brewfile](inventory/Brewfile.macos)
 preserves the observed package selection, while [the version inventory](inventory/homebrew-versions.txt)
 records installed dependencies and versions for troubleshooting. These inventories
@@ -160,3 +160,11 @@ The cask updates itself, so plain `brew upgrade` skips it. Update it with
 `brew upgrade --cask --greedy gcloud-cli`, which keeps Homebrew's recorded
 version current. `gcloud components update` also works, but Homebrew then still
 reports the old version, and a later cask upgrade may overwrite the updated SDK.
+
+Raspberry Pi Imager (`cask "raspberry-pi-imager"`) is in the macOS baseline for
+writing Raspberry Pi OS and other images to microSD cards and USB drives. To
+install it on an existing machine, run `brew install --cask raspberry-pi-imager`;
+`brew upgrade` keeps it current. On Linux/WSL, use the
+[official download](https://www.raspberrypi.com/software/) or your distribution's
+package; WSL usually cannot write to removable drives, so image cards from
+Windows instead.

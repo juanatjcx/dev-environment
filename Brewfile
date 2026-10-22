@@ -29,4 +29,5 @@ if OS.mac?
   cask "google-chrome"
   cask "docker-desktop"
   cask "gcloud-cli"
+  cask "raspberry-pi-imager"
 end
