@@ -39,8 +39,9 @@ were copied. See `inventory/` for the package snapshot.
 
 - Installed Docker Desktop 4.93.0 (240920), Apple Silicon, in `/Applications/Docker.app`.
 - Installation source: Homebrew-fetched Docker DMG, copied directly into Applications.
-  This installation has no Homebrew cask receipt; `brew list --cask` does not capture it.
-- Docker Engine/client 29.8.1; Compose 5.5.1; context `desktop-linux`.
+  This installation has no Homebrew cask receipt; `brew list --cask` does not capture it
+  (adopted by Homebrew on 2026-10-21; see below).
+- Docker Engine/client 29.8.1; Compose v5.5.1; context `desktop-linux`.
 - Login shell resolves Docker through `~/.docker/bin/docker`.
 - Verified client/server connectivity, `docker compose version`, and a successful
   `docker run --rm hello-world` (Linux ARM64 container).
@@ -61,12 +62,17 @@ were copied. See `inventory/` for the package snapshot.
 
 ## Docker Desktop adopted by Homebrew — 2026-10-21
 
-- Docker Desktop had updated itself to 4.96.1 (`Info.plist` modified 04:59).
-- `brew install --cask --adopt docker-desktop` succeeded at 18:50 after the
-  terminal was allowed App Management access. The cask receipt is 4.96.1,244132,
-  and the Caskroom entry is a symlink to the existing `/Applications/Docker.app`.
+- The app was at 4.96.1 when `brew install --cask --adopt docker-desktop`
+  succeeded at 18:50, after the terminal was allowed App Management access.
+  The receipt was 4.96.1,244132, and the Caskroom entry is a symlink to the
+  existing `/Applications/Docker.app`.
+- Homebrew upgraded the cask to 4.96.2,244353 on 2026-10-22 at 09:54, which
+  also recreated the root-owned `/usr/local/bin/docker*` and
+  `/usr/local/cli-plugins/docker-compose` links.
 - `brew bundle check --file=Brewfile` passes without `HOMEBREW_BUNDLE_CASK_SKIP`.
-- Docker CLI 29.9.2 and Compose v5.6.0 resolve through `~/.docker/bin`. The
-  engine was not running at the check, so `docker run` was not re-verified.
-- Docker Desktop had added a `~/.docker/bin` PATH block to `~/.zprofile` on
-  2026-10-19; the tracked zprofile does not include it.
+- On 2026-10-21, Docker CLI 29.9.2 and Compose v5.6.0 resolved through
+  `~/.docker/bin`. The engine was not running, so `docker run` was not re-verified.
+- `~/.zprofile` (last modified 2026-10-19) contains a Docker Desktop block that
+  adds `~/.docker/bin` to `PATH`; the tracked zprofile does not include it.
+- `inventory/Brewfile.macos` and `inventory/homebrew-versions.txt` were not
+  refreshed and do not list the docker-desktop cask.
