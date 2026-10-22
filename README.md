@@ -167,3 +167,21 @@ without rerunning bootstrap, run `brew install --cask <name>`.
   distribution's package; WSL usually cannot write to removable drives, so image
   cards from Windows instead.
 - **Others**: 1Password, ChatGPT, Claude, Claude Code, Codex and Ghostty.
+
+## Claude Code plugins
+
+[`claude/plugins.txt`](claude/plugins.txt) lists the Claude Code plugins to
+install at user scope, as `plugin@marketplace`, and
+[`claude/marketplaces.txt`](claude/marketplaces.txt) lists the extra
+marketplaces they come from. Bootstrap runs `scripts/setup-claude.sh`, which
+adds missing marketplaces, installs missing plugins and updates installed ones
+to the latest version. It skips everything if Claude Code is not installed, and
+it never auto-approves a plugin that runs its own setup command, so you may be
+asked to confirm one. Restart Claude Code to load updates.
+
+To add a plugin, install it with `claude plugin install <plugin@marketplace>` and
+add the same line to `claude/plugins.txt`. The script does not uninstall plugins
+missing from the list. Plugins provided by your claude.ai account (for example,
+product-management or engineering) sync when you sign in and are not listed.
+The rest of `~/.claude/settings.json` (theme and other preferences) is personal
+and stays out of this repo.

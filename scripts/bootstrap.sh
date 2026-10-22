@@ -23,3 +23,4 @@ clone_or_update https://github.com/zsh-users/zsh-syntax-highlighting.git "$HOME/
 bash "$root/scripts/install-shell.sh"
 bash "$root/scripts/setup-node.sh"
 bash "$root/scripts/setup-vim.sh"
+bash "$root/scripts/setup-claude.sh"

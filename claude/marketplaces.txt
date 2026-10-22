@@ -1,0 +1,3 @@
+# Plugin marketplaces to add, as "<name> <GitHub owner/repo>".
+# anthropic-plugin-directory is built into Claude Code and needs no entry.
+claude-plugins-official anthropics/claude-plugins-official

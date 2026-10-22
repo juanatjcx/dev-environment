@@ -1,0 +1,11 @@
+# Claude Code plugins installed at user scope, as plugin@marketplace.
+# Plugins from your claude.ai account sync on sign-in and are not listed here.
+claude-code-setup@anthropic-plugin-directory
+code-review-anthropics@anthropic-plugin-directory
+code-simplifier@anthropic-plugin-directory
+feature-dev@anthropic-plugin-directory
+firebase@anthropic-plugin-directory
+frontend-design@anthropic-plugin-directory
+playwright@anthropic-plugin-directory
+pr-review-toolkit@anthropic-plugin-directory
+swift-lsp@claude-plugins-official
