@@ -1,11 +1,13 @@
 # Development environment
 
-Personal machine setup for macOS, Linux, and Windows (WSL2). Everything installs
-at its latest release; the one exception is TypeScript for the Vim tooling (see
-[the editor guide](docs/editor.md)). This is a development baseline, not a full
-machine backup: apps installed outside the Brewfile are not covered. Start here
-on a new machine; review [the recommendations](docs/recommendations.md)
-afterward.
+Personal machine setup for macOS, Linux, and Windows (WSL2). Tools install at
+their latest release, with three exceptions: Node uses the latest LTS, the Vim
+tooling keeps TypeScript on 6.x, and the Node debug adapter follows Vimspector's
+own choice (see [the editor guide](docs/editor.md)). To update, run
+`brew update && brew upgrade --greedy` and rerun `scripts/setup-vim.sh`. This is
+a development baseline, not a full machine backup: apps installed outside the
+Brewfile are not covered. Start here on a new machine; review [the
+recommendations](docs/recommendations.md) afterward.
 
 | Platform | CLI and shell | Desktop apps |
 | --- | --- | --- |

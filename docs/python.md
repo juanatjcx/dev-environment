@@ -23,5 +23,7 @@ No Python runtime or project environment is created just by installing uv.
 Reference: https://docs.astral.sh/uv/guides/projects/
 
 The Vim debugger setup also installs the newest stable Python through uv into an
-isolated `~/.local/share/developer-debugger` environment, rebuilt on each run. This does not choose runtimes
+isolated `~/.local/share/developer-debugger` environment, rebuilt on each run of
+`setup-vim.sh`. The environment uses that exact Python release; if you remove it
+with `uv python uninstall`, rerun `setup-vim.sh`. This does not choose runtimes
 for your Python application projects.
