@@ -41,5 +41,5 @@ unless it removes real repetition. Examples from the current repositories:
 `scripts/doctor.sh` reports these: each project's `.nvmrc` pin against the Node
 versions nvm has installed, the .NET SDK each `global.json` resolves to, the
 selected Xcode, the Docker engine when a project has a Dockerfile or Compose
-file, and whether the Claude Code plugin list is installed. Project command
+file, and whether the Claude Code plugins on the list are installed and enabled. Project command
 wrappers are not implemented.

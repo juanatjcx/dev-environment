@@ -2,6 +2,7 @@
 set -uo pipefail
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 repos="${REPOS_HOME:-$HOME/repos}"
+repos="${repos%/}"
 missing=0
 warnings=0
 warn() { printf 'WARN  %s\n' "$*"; warnings=$((warnings + 1)); }
@@ -10,7 +11,8 @@ section() { printf '\n== %s\n' "$1"; }
 project_files() {
   [[ -d "$repos" ]] || return 0
   find "$repos" -maxdepth 5 \( -name node_modules -o -name .git -o -name bin \
-    -o -name obj \) -prune -o \( "$@" \) -print 2>/dev/null | sort
+    -o -name obj -o -name .venv -o -name venv -o -name vendor \) -prune \
+    -o \( "$@" \) -print 2>/dev/null | sort
 }
 
 section Tools
@@ -40,8 +42,12 @@ if [[ -s "$nvm_script" ]]; then
   printf 'default    %s\n' "$(nvm version default)"
   while read -r nvmrc; do
     pin="$(tr -d '[:space:]' <"$nvmrc")"
-    resolved="$(nvm version "$pin")"
     dir="${nvmrc%/.nvmrc}"
+    if [[ -z "$pin" ]]; then
+      warn "${dir#"$repos"/} has an empty .nvmrc."
+      continue
+    fi
+    resolved="$(nvm version "$pin")"
     if [[ "$resolved" == N/A ]]; then
       warn "${dir#"$repos"/} pins Node $pin, which is not installed; run nvm install there."
     else
@@ -61,7 +67,7 @@ if command -v dotnet >/dev/null; then
     if sdk="$(cd "$dir" && dotnet --version 2>/dev/null)"; then
       printf '%-10s %s\n' "$sdk" "${dir#"$repos"/}"
     else
-      warn "${dir#"$repos"/} has no installed SDK matching its global.json."
+      warn "${dir#"$repos"/}: global.json does not resolve to an installed SDK."
     fi
   done < <(project_files -name global.json)
 fi
@@ -79,33 +85,58 @@ fi
 
 section Docker
 docker_projects="$(project_files -name 'Dockerfile*' -o -name 'compose*.y*ml' \
-  -o -name 'docker-compose*.y*ml' | sed "s|^$repos/||; s|/[^/]*$||" | sort -u)"
+  -o -name 'docker-compose*.y*ml' | while read -r file; do
+    dir="$(dirname "$file")"
+    [[ "$dir" == "$repos" ]] && echo . || echo "${dir#"$repos"/}"
+  done | sort -u)"
 if [[ -z "$docker_projects" ]]; then
   echo 'No project uses Docker; skipped.'
 else
   printf 'Used by: %s\n' "$(paste -sd ' ' - <<<"$docker_projects")"
   if ! command -v docker >/dev/null; then
     warn 'docker is not on PATH.'
-  elif docker info >/dev/null 2>&1; then
-    echo "Engine running ($(docker version --format '{{.Server.Version}}' 2>/dev/null))."
   else
-    warn 'Docker engine is not running; start Docker Desktop before using it.'
+    # macOS has no timeout(1); give docker info 10 seconds, then give up.
+    docker info >/dev/null 2>&1 &
+    pid=$!
+    for _ in 1 2 3 4 5 6 7 8 9 10; do
+      kill -0 "$pid" 2>/dev/null || break
+      sleep 1
+    done
+    if kill -0 "$pid" 2>/dev/null; then
+      kill "$pid" 2>/dev/null
+      wait "$pid" 2>/dev/null
+      warn 'Docker engine did not answer within 10 seconds.'
+    elif wait "$pid"; then
+      echo "Engine running ($(docker version --format '{{.Server.Version}}' 2>/dev/null))."
+    else
+      warn 'Docker engine is not running; start Docker Desktop before using it.'
+    fi
   fi
 fi
 
 section 'Claude Code plugins'
-if command -v claude >/dev/null && command -v jq >/dev/null; then
-  installed="$(claude plugin list --json 2>/dev/null |
-    jq -r '.[] | select(.scope == "user" and .enabled) | .id')"
+if ! command -v claude >/dev/null; then
+  echo 'Claude Code not installed; skipped.'
+elif ! command -v jq >/dev/null; then
+  warn 'jq is missing, so Claude Code plugins were not checked.'
+elif ! plugins="$(claude plugin list --json 2>/dev/null |
+  jq -r '.[] | select(.scope == "user") | "\(.id) \(.enabled)"')"; then
+  warn 'Could not list Claude Code plugins.'
+else
   count=0
   while read -r plugin; do
     count=$((count + 1))
-    grep -qxF "$plugin" <<<"$installed" ||
-      warn "$plugin is not installed and enabled; run scripts/setup-claude.sh."
-  done < <(awk '{ sub(/#.*/, ""); sub(/[[:space:]]+$/, "") } NF' "$root/claude/plugins.txt")
+    if grep -qxF "$plugin true" <<<"$plugins"; then
+      :
+    elif grep -qxF "$plugin false" <<<"$plugins"; then
+      warn "$plugin is disabled; run claude plugin enable $plugin."
+    else
+      warn "$plugin is not installed; run scripts/setup-claude.sh."
+    fi
+  done < <(awk '{ sub(/#.*/, ""); sub(/[[:space:]]+$/, "") } NF' \
+    "$root/claude/plugins.txt")
   echo "Checked $count listed plugins."
-else
-  echo 'Claude Code not installed; skipped.'
 fi
 
 section Summary
