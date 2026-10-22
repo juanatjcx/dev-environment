@@ -12,7 +12,7 @@ tooling, explicit Python tooling, and Docker Desktop on macOS.
 - **.NET:** Calor pins SDK 10.0.100 with `latestMinor` roll-forward, so newer
   10.0 SDKs from Homebrew work. Preserve that existing policy. When Homebrew's
   `dotnet` moves to a new major, Calor will no longer find a matching SDK; plan
-  that bump in Calor or install a 10.0 SDK alongside.
+  that bump in Calor or install a 10.0 SDK in the same dotnet root.
 - **Editor:** see [Vim tooling](editor.md). EditorConfig files are added to
   this repo and the two Node projects; existing source is not reformatted.
 - **Python:** see [uv workflow](python.md). Keep environments inside projects;

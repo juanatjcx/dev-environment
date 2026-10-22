@@ -46,13 +46,13 @@ bootstrap or `Brewfile.containers` get a normal receipt and are not affected.
 
 ### Docker CLI paths
 
-Docker Desktop can install CLI tools in the user directory `~/.docker/bin`;
-the shell supports this directory and the bundled CLI. The Homebrew cask also
+Docker Desktop can install CLI tools in the user directory `~/.docker/bin`; the
+shell supports this directory and the bundled CLI. The Homebrew cask also
 creates root-owned links in `/usr/local/bin` (`docker`, credential helpers,
 `kubectl`) and `/usr/local/cli-plugins/docker-compose`. Docker Desktop may
-append a block to `~/.zprofile` that adds `~/.docker/bin` to `PATH`. That block is redundant with
-the tracked zshrc; `scripts/install-shell.sh` replaces `~/.zprofile` without
-it, and Docker may add it again later.
+append a block to `~/.zprofile` that adds `~/.docker/bin` to `PATH`. That block
+is redundant with the tracked zshrc; `scripts/install-shell.sh` replaces
+`~/.zprofile` without it, and Docker may add it again later.
 
 ### Other platforms
 

@@ -4,7 +4,8 @@ Personal machine setup for macOS, Linux, and Windows (WSL2). Homebrew packages
 install at their latest release; only the Vim language tooling in
 `scripts/setup-vim.sh` is pinned. This is a development baseline, not a full
 machine backup: apps installed outside the Brewfile are not covered. Start here
-on a new machine; review [the recommendations](docs/recommendations.md) afterward.
+on a new machine; review [the recommendations](docs/recommendations.md)
+afterward.
 
 | Platform | CLI and shell | Desktop apps |
 | --- | --- | --- |
