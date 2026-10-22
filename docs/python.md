@@ -22,6 +22,6 @@ No Python runtime or project environment is created just by installing uv.
 
 Reference: https://docs.astral.sh/uv/guides/projects/
 
-The Vim debugger setup also installs Python 3.13.16 through uv into an isolated
-`~/.local/share/developer-debugger` environment. This does not choose runtimes
+The Vim debugger setup also installs the newest stable Python through uv into an
+isolated `~/.local/share/developer-debugger` environment, rebuilt on each run. This does not choose runtimes
 for your Python application projects.

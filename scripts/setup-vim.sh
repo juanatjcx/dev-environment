@@ -19,11 +19,15 @@ for repo in prabirshrestha/vim-lsp prabirshrestha/asyncomplete.vim prabirshresth
   dest="$package_root/${repo##*/}"
   if [[ ! -e "$dest" ]]; then
     git clone --depth=1 "https://github.com/$repo.git" "$dest"
+  elif [[ -d "$dest/.git" ]]; then
+    git -C "$dest" pull --ff-only --quiet || printf 'Could not update %s; left as is.\n' "$dest" >&2
   fi
 done
 # Isolate language-server tools from project dependencies and Node switches.
 mkdir -p "$HOME/.local/share/developer-lsp"
-npm install --prefix "$HOME/.local/share/developer-lsp" typescript@6.0.3 typescript-language-server@6.0.1 svelte-language-server@0.18.4 vscode-langservers-extracted@4.10.0 pyright@1.1.414
+# Latest releases, except TypeScript: 7.x no longer ships the tsserver that
+# typescript-language-server needs, so stay on the newest 6.x.
+npm install --prefix "$HOME/.local/share/developer-lsp" typescript@6 typescript-language-server@latest svelte-language-server@latest vscode-langservers-extracted@latest pyright@latest
 mkdir -p "$HOME/.local/bin"
 for tool in typescript-language-server svelteserver vscode-html-language-server vscode-css-language-server vscode-json-language-server vscode-eslint-language-server pyright-langserver; do
   target="$HOME/.local/bin/$tool"
@@ -32,8 +36,12 @@ for tool in typescript-language-server svelteserver vscode-html-language-server 
   chmod 755 "$target"
 done
 ln -sfn "$HOME/.local/bin/svelteserver" "$HOME/.local/bin/svelte-language-server"
-if command -v dotnet >/dev/null && [[ ! -x "$HOME/.local/share/developer-lsp/dotnet/csharp-ls" ]]; then
-  dotnet tool install csharp-ls --tool-path "$HOME/.local/share/developer-lsp/dotnet"
+if command -v dotnet >/dev/null; then
+  if [[ -x "$HOME/.local/share/developer-lsp/dotnet/csharp-ls" ]]; then
+    dotnet tool update csharp-ls --tool-path "$HOME/.local/share/developer-lsp/dotnet"
+  else
+    dotnet tool install csharp-ls --tool-path "$HOME/.local/share/developer-lsp/dotnet"
+  fi
 fi
 if [[ -x "$HOME/.local/share/developer-lsp/dotnet/csharp-ls" ]]; then
   ln -sfn "$HOME/.local/share/developer-lsp/dotnet/csharp-ls" "$HOME/.local/bin/csharp-ls"
@@ -41,9 +49,12 @@ fi
 printf 'Vim packages and web/Python language servers installed.\n'
 
 python3 "$package_root/vimspector/install_gadget.py" --force-enable-node --update-gadget-config
-# Use a wheel in an isolated Python environment instead of compiling Vimspector's
-# bundled debugpy sources against Homebrew's newer Python headers.
-if [[ ! -x "$HOME/.local/share/developer-debugger/bin/python" ]]; then
-  uv venv --python 3.13.16 "$HOME/.local/share/developer-debugger"
-fi
-uv pip install --python "$HOME/.local/share/developer-debugger/bin/python" debugpy==1.8.22
+# Use a debugpy wheel in an isolated Python environment instead of compiling
+# Vimspector's bundled debugpy sources. Rebuild it on the newest stable
+# uv-managed CPython each run.
+python_version="$(uv python list --managed-python --output-format json |
+  jq -r '[.[] | select(.implementation == "cpython" and .variant == "default"
+    and (.version | test("^[0-9]+\\.[0-9]+\\.[0-9]+$")))][0].version')"
+[[ "$python_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo 'No stable Python found by uv.' >&2; exit 1; }
+uv venv --quiet --clear --managed-python --python "$python_version" "$HOME/.local/share/developer-debugger"
+uv pip install --python "$HOME/.local/share/developer-debugger/bin/python" --upgrade debugpy
