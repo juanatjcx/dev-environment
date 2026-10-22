@@ -10,7 +10,9 @@ tooling, explicit Python tooling, and Docker Desktop on macOS.
   Review older majors separately rather than mixing upgrades into setup work.
   Keep dependency lockfiles and use `npm ci`.
 - **.NET:** Calor pins SDK 10.0.100 with `latestMinor` roll-forward, so newer
-  10.0 SDKs from Homebrew work. Preserve that existing policy.
+  10.0 SDKs from Homebrew work. Preserve that existing policy. When Homebrew's
+  `dotnet` moves to a new major, Calor will no longer find a matching SDK; plan
+  that bump in Calor or install a 10.0 SDK alongside.
 - **Editor:** see [Vim tooling](editor.md). EditorConfig files are added to
   this repo and the two Node projects; existing source is not reformatted.
 - **Python:** see [uv workflow](python.md). Keep environments inside projects;
@@ -39,4 +41,4 @@ unless it removes real repetition. Examples from the current repositories:
 A future doctor enhancement should report selected runtime versions, compare
 Node to `.nvmrc`, resolve the SDK through `global.json`, show Xcode selection,
 and check Docker only when a project requires it. These are proposals;
-project command wrappers and doctor changes are not part of this follow-up.
+project command wrappers and doctor changes are not implemented yet.

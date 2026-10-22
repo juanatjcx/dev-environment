@@ -10,9 +10,8 @@ run `brew bundle --file=Brewfile.containers`, then open Docker Desktop and compl
 first launch. Homebrew's CLI links and post-install Kubernetes link can require
 an administrator password, so run this command in an interactive terminal.
 
-For a manual installation, mount the official Apple Silicon DMG, copy
-`Docker.app` into Applications, launch it, and complete first launch. Then
-adopt it into Homebrew as described below.
+Prefer the cask. If Docker Desktop was instead installed by copying `Docker.app`
+from the official DMG, adopt it into Homebrew as described below.
 
 ### Adopting a manually installed app
 
@@ -49,9 +48,9 @@ bootstrap or `Brewfile.containers` get a normal receipt and are not affected.
 
 Docker Desktop can install CLI tools in the user directory `~/.docker/bin`;
 the shell supports this directory and the bundled CLI. The Homebrew cask also
-creates root-owned links in `/usr/local/bin` (`docker`, credential helpers) and
-`/usr/local/cli-plugins/docker-compose`. Docker Desktop may append a block to
-`~/.zprofile` that adds `~/.docker/bin` to `PATH`. That block is redundant with
+creates root-owned links in `/usr/local/bin` (`docker`, credential helpers,
+`kubectl`) and `/usr/local/cli-plugins/docker-compose`. Docker Desktop may
+append a block to `~/.zprofile` that adds `~/.docker/bin` to `PATH`. That block is redundant with
 the tracked zshrc; `scripts/install-shell.sh` replaces `~/.zprofile` without
 it, and Docker may add it again later.
 

@@ -51,7 +51,7 @@ bindkey '^R' history-incremental-search-backward
 bindkey '^[[A' up-line-or-beginning-search
 bindkey '^[[B' down-line-or-beginning-search
 
-# Homebrew nvm is a compatibility choice matching this machine.
+# Homebrew nvm is installed by the Brewfile.
 # Upstream nvm installation at ~/.nvm is supported too.
 export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 if [[ -s "$NVM_DIR/nvm.sh" ]]; then

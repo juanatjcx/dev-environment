@@ -1,8 +1,10 @@
 # Development environment
 
-Personal machine setup for macOS, Linux, and Windows (WSL2). It installs the
-latest release of every tool; nothing is pinned here. Start here on a new
-machine; review [the recommendations](docs/recommendations.md) afterward.
+Personal machine setup for macOS, Linux, and Windows (WSL2). Homebrew packages
+install at their latest release; only the Vim language tooling in
+`scripts/setup-vim.sh` is pinned. This is a development baseline, not a full
+machine backup: apps installed outside the Brewfile are not covered. Start here
+on a new machine; review [the recommendations](docs/recommendations.md) afterward.
 
 | Platform | CLI and shell | Desktop apps |
 | --- | --- | --- |
@@ -110,10 +112,10 @@ SSO/login workflow; never commit their credentials or copied home directories.
 ## Maintenance
 
 - Update everything with `brew update && brew upgrade --greedy`. `--greedy`
-  also upgrades apps that update themselves (Chrome, Docker Desktop, gcloud),
-  which a plain `brew upgrade` skips.
+  also upgrades apps that update themselves (most casks here, such as Chrome,
+  Docker Desktop and gcloud), which a plain `brew upgrade` skips.
 - Run `omz update`; update external plugins separately if they are Git clones.
-  Plugin directories on the original Mac are not standalone Git checkouts, so
+  Plugin directories installed without Git are not standalone checkouts, so
   do not assume `git pull` there will update them.
 - To add a tool, install it with Homebrew and add it to the Brewfile.
 - A Docker Desktop copied in manually has no Homebrew receipt, so
@@ -129,7 +131,8 @@ package installation requires verification on those systems.
 
 Bootstrap initializes Node LTS and installs Vim language tooling. See
 [the editor guide](docs/editor.md), [Python workflow](docs/python.md),
-[container guidance](docs/containers.md), and [recovery/Xcode steps](docs/recovery.md).
+[container guidance](docs/containers.md), and
+[recovery/Xcode steps](docs/recovery.md).
 
 ## macOS apps
 

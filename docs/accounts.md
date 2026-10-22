@@ -35,8 +35,8 @@ See [Git conditional configuration](https://git-scm.com/docs/git-config) and
 
 gcloud does not switch accounts by directory. To keep personal and work
 accounts apart, give each its own named configuration and switch deliberately.
-This machine currently has only the `default` configuration, signed in with the
-personal account. To add a work configuration:
+Use the `default` configuration for the personal account. To add a work
+configuration:
 
 ```sh
 gcloud config configurations create work   # creates and activates it
