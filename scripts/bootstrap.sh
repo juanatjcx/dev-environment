@@ -7,6 +7,7 @@ case "$(uname -s)" in
 esac
 command -v brew >/dev/null || { echo 'Install Homebrew and activate brew shellenv; see README.md.' >&2; exit 1; }
 brew bundle --file="$root/Brewfile"
+bash "$root/scripts/setup-sudo.sh" || echo 'Touch ID for sudo was not set up; see the messages above.' >&2
 # Clone missing repositories and fast-forward existing Git checkouts.
 clone_or_update() {
   local url="$1" dest="$2"

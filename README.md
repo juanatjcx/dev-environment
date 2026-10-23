@@ -42,8 +42,8 @@ recommendations](docs/recommendations.md) afterward.
 
 `doctor.sh` fails when a tool or Brewfile entry is missing. It also checks the
 projects under `~/repos` (Node pins, .NET SDK pins, Docker when a project uses
-it), the selected Xcode and the Claude Code plugins, and prints a warning for
-each problem without failing.
+it), the selected Xcode, Touch ID for sudo and the Claude Code plugins, and
+prints a warning for each problem without failing.
 
 The scripts are executable bash scripts, so `./scripts/bootstrap.sh` works as
 well as `bash scripts/bootstrap.sh`.
@@ -187,6 +187,18 @@ without rerunning bootstrap, run `brew install --cask <name>`.
   [Tailscale's install instructions](https://tailscale.com/download/linux);
   under WSL, install the Windows app on the host instead of inside WSL.
 - **Others**: 1Password, ChatGPT, Claude, Claude Code, Codex and Ghostty.
+
+## Touch ID for sudo
+
+On macOS, bootstrap runs `scripts/setup-sudo.sh`, which lets `sudo` accept
+Touch ID. It enables the `pam_tid.so` line in `/etc/pam.d/sudo_local`, the file
+Apple provides for local changes that survive macOS updates (it starts from
+Apple's `sudo_local.template`, or adds the line first if the file already
+exists). Writing that file asks for your password once; later runs see it
+enabled and change nothing. The password still works where Touch ID cannot be
+used, such as over SSH or with no fingerprint enrolled. Inside tmux or screen,
+Touch ID does not prompt and sudo falls back to the password. To undo it, run
+`sudo rm /etc/pam.d/sudo_local`.
 
 ## Claude Code plugins
 

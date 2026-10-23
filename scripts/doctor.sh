@@ -81,6 +81,13 @@ if [[ "$(uname -s)" == Darwin ]]; then
     "") warn 'No developer tools selected; see docs/recovery.md.' ;;
     *) warn "Command Line Tools selected ($developer_dir); select Xcode for Apple builds." ;;
   esac
+
+  section 'Touch ID for sudo'
+  if grep -Eqs '^[[:space:]]*auth[[:space:]]+sufficient[[:space:]]+pam_tid\.so' /etc/pam.d/sudo_local; then
+    echo 'Enabled in /etc/pam.d/sudo_local.'
+  else
+    warn 'Touch ID for sudo is not enabled; run scripts/setup-sudo.sh.'
+  fi
 fi
 
 section Docker
