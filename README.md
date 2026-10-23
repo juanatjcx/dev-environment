@@ -136,6 +136,12 @@ SSO/login workflow; never commit their credentials or copied home directories.
   `brew bundle check` fails on it and bootstrap is expected to stop. Adopt it
   rather than reinstalling; see
   [adopting a manually installed app](docs/containers.md#adopting-a-manually-installed-app).
+- A Mac App Store copy of Tailscale also has no Homebrew receipt, and Homebrew
+  would install the standalone build next to it, which Tailscale warns against.
+  Before running bootstrap on such a Mac, quit Tailscale, drag it from
+  Applications to the Trash (this asks for your password), empty the Trash and
+  restart the Mac. To run bootstrap before switching, prefix it with
+  `HOMEBREW_BUNDLE_CASK_SKIP=tailscale-app`.
 - Avoid `brew bundle cleanup --force` with this repo; unrelated packages may
   be removed. The bootstrap never performs cleanup.
 
@@ -173,11 +179,13 @@ without rerunning bootstrap, run `brew install --cask <name>`.
   distribution's package; WSL usually cannot write to removable drives, so image
   cards from Windows instead.
 - **Tailscale** (`tailscale-app`): private network between your machines. This
-  is Tailscale's standalone build, not the Mac App Store one; remove an App
-  Store copy before installing it, then approve its system extension in System
-  Settings → Privacy & Security when asked and sign in again. On Linux/WSL, use
-  [Tailscale's install instructions](https://tailscale.com/download/linux), or
-  the Windows app for WSL.
+  is Tailscale's standalone build, not the Mac App Store one, and the two must
+  not be installed together; see [Maintenance](#maintenance) for switching. On first launch,
+  approve its system extension and VPN configuration when macOS asks, then sign
+  in. The app provides the `tailscale` CLI, so do not also install the
+  `tailscale` formula. On Linux, use
+  [Tailscale's install instructions](https://tailscale.com/download/linux);
+  under WSL, install the Windows app on the host instead of inside WSL.
 - **Others**: 1Password, ChatGPT, Claude, Claude Code, Codex and Ghostty.
 
 ## Claude Code plugins
