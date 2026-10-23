@@ -83,7 +83,10 @@ if [[ "$(uname -s)" == Darwin ]]; then
   esac
 
   section 'Touch ID for sudo'
-  if grep -Eqs '^[[:space:]]*auth[[:space:]]+sufficient[[:space:]]+pam_tid\.so' /etc/pam.d/sudo_local; then
+  if [[ -e /etc/pam.d/sudo_local && ! -r /etc/pam.d/sudo_local ]]; then
+    warn 'Cannot read /etc/pam.d/sudo_local to check Touch ID for sudo.'
+  elif grep -Eqs '^[[:space:]]*auth[[:space:]]+sufficient[[:space:]]+([^[:space:]]*/)?pam_tid\.so' \
+    /etc/pam.d/sudo_local; then
     echo 'Enabled in /etc/pam.d/sudo_local.'
   else
     warn 'Touch ID for sudo is not enabled; run scripts/setup-sudo.sh.'

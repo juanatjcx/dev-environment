@@ -192,13 +192,15 @@ without rerunning bootstrap, run `brew install --cask <name>`.
 
 On macOS, bootstrap runs `scripts/setup-sudo.sh`, which lets `sudo` accept
 Touch ID. It enables the `pam_tid.so` line in `/etc/pam.d/sudo_local`, the file
-Apple provides for local changes that survive macOS updates (it starts from
-Apple's `sudo_local.template`, or adds the line first if the file already
-exists). Writing that file asks for your password once; later runs see it
-enabled and change nothing. The password still works where Touch ID cannot be
-used, such as over SSH or with no fingerprint enrolled. Inside tmux or screen,
-Touch ID does not prompt and sudo falls back to the password. To undo it, run
-`sudo rm /etc/pam.d/sudo_local`.
+Apple provides for local changes that survive macOS updates. A new file starts
+from Apple's `sudo_local.template`; in an existing file, other entries are kept
+and the line goes after any `pam_reattach` entry, which must come first. Writing
+the file asks for your password once; later runs see it enabled and change
+nothing. The password still works where Touch ID cannot be used, such as over
+SSH or with no fingerprint enrolled. Inside tmux or screen, Touch ID does not
+prompt and sudo falls back to the password unless you set up `pam_reattach`.
+To undo it, comment out the `pam_tid.so` line with
+`sudo vim /etc/pam.d/sudo_local` (the file is read-only, so save with `:w!`).
 
 ## Claude Code plugins
 
