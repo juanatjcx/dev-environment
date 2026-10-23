@@ -172,6 +172,12 @@ without rerunning bootstrap, run `brew install --cask <name>`.
   [official download](https://www.raspberrypi.com/software/) or your
   distribution's package; WSL usually cannot write to removable drives, so image
   cards from Windows instead.
+- **Tailscale** (`tailscale-app`): private network between your machines. This
+  is Tailscale's standalone build, not the Mac App Store one; remove an App
+  Store copy before installing it, then approve its system extension in System
+  Settings → Privacy & Security when asked and sign in again. On Linux/WSL, use
+  [Tailscale's install instructions](https://tailscale.com/download/linux), or
+  the Windows app for WSL.
 - **Others**: 1Password, ChatGPT, Claude, Claude Code, Codex and Ghostty.
 
 ## Claude Code plugins

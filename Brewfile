@@ -30,4 +30,5 @@ if OS.mac?
   cask "docker-desktop"
   cask "gcloud-cli"
   cask "raspberry-pi-imager"
+  cask "tailscale-app"
 end
