@@ -33,8 +33,8 @@ See [Git conditional configuration](https://git-scm.com/docs/git-config) and
 
 ## Signing commits with 1Password
 
-Commits and tags can be signed with an SSH key kept in 1Password, so GitHub
-marks them Verified. Signing is set per directory identity:
+Commits can be signed with an SSH key kept in 1Password, so GitHub marks them
+Verified. Signing is set per directory identity:
 
 ```sh
 bash scripts/setup-signing.sh juanatjcx "Github JuanAtJcx"
@@ -44,17 +44,19 @@ The second argument is the key's name in 1Password (the 1Password SSH agent
 must be on: Settings → Developer) or the public key itself. The key must also be
 added to that GitHub account as a *signing* key, which is separate from an
 authentication key. 1Password asks you to approve signing, usually with Touch
-ID, so commits from scripts or agents wait for that approval. Run
-`setup-signing.sh` again after `setup-git.sh`; it adds to the identity file and
-`setup-git.sh` leaves those settings alone. Check a commit with
-`git log --show-signature -1`.
+ID, so commits from scripts or agents wait for that approval. Tags are not
+signed automatically, so plain `git tag NAME` still makes a lightweight tag;
+use `git tag -s` for a signed one. Rerunning `setup-git.sh` keeps these
+settings; rerun `setup-signing.sh` only if the identity's email changes, so the
+local check (`git log --show-signature -1`) names the new address. On WSL,
+1Password signs through its Windows helper, which this script does not set up.
 
-Personal repositories are signed. Work repositories are not yet: the
-juanmicrosoft signing key on GitHub is not in 1Password. Once a work key is in
+Sign personal repositories with the command above. Work repositories stay
+unsigned for now: the juanmicrosoft signing key on GitHub is not in 1Password.
+Once a work key is in
 1Password and added to that account, run the same command with `juanmicrosoft`
 and the key's name. To stop signing for an identity, run
-`git config --file ~/.config/git/<account>.gitconfig commit.gpgsign false`
-(and the same for `tag.gpgsign`).
+`git config --file ~/.config/git/<account>.gitconfig commit.gpgsign false`.
 
 ## Google Cloud and Firebase accounts
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# Sign commits and tags for one directory identity with an SSH key held in
+# Sign commits for one directory identity with an SSH key held in
 # 1Password. The private key never leaves 1Password; Git only gets the public
 # key, and 1Password asks you to approve signing.
 if (( $# != 2 )); then
@@ -29,7 +29,8 @@ if [[ "$key" != ssh-* ]]; then
   name="$key"
   keys="$(SSH_AUTH_SOCK="$agent" ssh-add -L)" ||
     { echo 'Could not read keys from the 1Password SSH agent; is 1Password unlocked?' >&2; exit 1; }
-  key="$(awk -v name="$name" '{ c = $3; for (i = 4; i <= NF; i++) c = c " " $i } c == name { print $1, $2; exit }' <<<"$keys")"
+  # Each line is "type key comment"; the comment is the 1Password key name.
+  key="$(awk -v name="$name" '{ c = $0; sub(/^[^ ]+ [^ ]+ ?/, "", c) } c == name { print $1, $2; exit }' <<<"$keys")"
   [[ -n "$key" ]] || { echo "No key named \"$name\" in the 1Password SSH agent." >&2; exit 1; }
 fi
 read -r key_type key_data _ <<<"$key"
@@ -41,10 +42,9 @@ git config --file "$file" gpg.format ssh
 git config --file "$file" gpg.ssh.program "$sign"
 git config --file "$file" user.signingkey "key::$key_type $key_data"
 git config --file "$file" commit.gpgsign true
-git config --file "$file" tag.gpgsign true
 # Let git log --show-signature verify these commits locally.
 signers="$config_dir/$account.allowed_signers"
 printf '%s namespaces="git" %s %s\n' "$email" "$key_type" "$key_data" >"$signers"
 git config --file "$file" gpg.ssh.allowedSignersFile "$signers"
-echo "Commits and tags in $account repositories are now signed with that key."
+echo "Commits in $account repositories are now signed with that key."
 echo 'GitHub shows them as Verified once the key is added there as a signing key.'

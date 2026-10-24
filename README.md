@@ -189,7 +189,11 @@ Mac without rerunning bootstrap, run `brew install --cask <name>`.
 - **Others**: 1Password, ChatGPT, Claude, Claude Code, Codex and Ghostty.
 - **Mac App Store apps** (through `mas`): 1Password for Safari, Developer
   (Apple's developer app) and Magnet (window snapping). Sign in to the App
-  Store before bootstrap; `mas` cannot sign in for you. Other App Store apps on
+  Store with the Apple Account that owns Magnet before bootstrap, since `mas`
+  cannot sign in for you, and expect a password prompt when it installs or
+  updates one. If an App Store install fails, `brew bundle` fails and bootstrap
+  stops; to run it without them, prefix bootstrap with
+  `HOMEBREW_BUNDLE_MAS_SKIP="1569813296 640199958 441258766"`. Other App Store apps on
   a Mac are personal and are not listed. Xcode also comes from the App Store but
   is installed by hand; see [recovery/Xcode steps](docs/recovery.md).
 
