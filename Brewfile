@@ -31,4 +31,9 @@ if OS.mac?
   cask "gcloud-cli"
   cask "raspberry-pi-imager"
   cask "tailscale-app"
+  # Mac App Store apps; mas needs you signed in to the App Store.
+  brew "mas"
+  mas "1Password for Safari", id: 1569813296
+  mas "Developer", id: 640199958
+  mas "Magnet", id: 441258766
 end

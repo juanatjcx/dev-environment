@@ -113,7 +113,7 @@ gh auth status
 ```
 
 The GitHub CLI provides [Git authentication setup](https://cli.github.com/manual/gh_auth).
-For your personal/work identities, run `bash scripts/setup-git.sh PERSONAL_EMAIL WORK_EMAIL`; see [accounts](docs/accounts.md), which also covers separate Google Cloud and Firebase accounts. Select identities deliberately before your first commit. Authenticate
+For your personal/work identities, run `bash scripts/setup-git.sh PERSONAL_EMAIL WORK_EMAIL`; see [accounts](docs/accounts.md), which also covers commit signing with 1Password and separate Google Cloud and Firebase accounts. Select identities deliberately before your first commit. Authenticate
 AWS, Azure, Google Cloud and Firebase only when needed, using your organization's approved
 SSO/login workflow; never commit their credentials or copied home directories.
 
@@ -156,8 +156,8 @@ Bootstrap initializes Node LTS and installs Vim language tooling. See
 
 ## macOS apps
 
-The Brewfile installs these casks on macOS only. To add one to an existing Mac
-without rerunning bootstrap, run `brew install --cask <name>`.
+The Brewfile installs these apps on macOS only. To add a cask to an existing
+Mac without rerunning bootstrap, run `brew install --cask <name>`.
 
 - **Docker Desktop** (`docker-desktop`): containers; see
   [container guidance](docs/containers.md).
@@ -187,6 +187,11 @@ without rerunning bootstrap, run `brew install --cask <name>`.
   [Tailscale's install instructions](https://tailscale.com/download/linux);
   under WSL, install the Windows app on the host instead of inside WSL.
 - **Others**: 1Password, ChatGPT, Claude, Claude Code, Codex and Ghostty.
+- **Mac App Store apps** (through `mas`): 1Password for Safari, Developer
+  (Apple's developer app) and Magnet (window snapping). Sign in to the App
+  Store before bootstrap; `mas` cannot sign in for you. Other App Store apps on
+  a Mac are personal and are not listed. Xcode also comes from the App Store but
+  is installed by hand; see [recovery/Xcode steps](docs/recovery.md).
 
 ## Touch ID for sudo
 
@@ -201,6 +206,25 @@ SSH or with no fingerprint enrolled. Inside tmux or screen, Touch ID does not
 prompt and sudo falls back to the password unless you set up `pam_reattach`.
 To undo it, comment out the `pam_tid.so` line with
 `sudo vim /etc/pam.d/sudo_local` (the file is read-only, so save with `:w!`).
+
+## macOS settings
+
+On macOS, bootstrap runs `scripts/setup-macos.sh`, which sets:
+
+- **Finder:** file extensions, hidden files, path bar and status bar shown;
+  folders sorted first; searches cover the current folder; no warning when
+  changing an extension.
+- **Typing:** automatic capitalization, smart quotes and dashes, double-space
+  period and autocorrect turned off, since they change code and commands.
+- **Keyboard:** fast key repeat with a short delay; holding a key repeats it
+  instead of showing the accent menu.
+- **Screenshots:** saved to `~/Screenshots` instead of the Desktop.
+
+It writes only values that differ and restarts Finder or the screenshot service
+only when one of theirs changed. Keyboard and typing settings reach every app
+after you log out and back in. To change one later, edit the script and rerun
+it; to restore Apple's default, run `defaults delete <domain> <key>` with the
+names from the script.
 
 ## Claude Code plugins
 
