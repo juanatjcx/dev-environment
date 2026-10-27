@@ -125,7 +125,10 @@ uses the 1Password SSH agent (turn it on in 1Password: Settings → Developer).
 Keys stay in 1Password and are approved there. Personal hosts go in
 `~/.ssh/config.local`, which is read first, so its settings win; it is never
 replaced. The first run moves an existing hand-written `~/.ssh/config` there
-and keeps a copy under `~/.dev-environment-backup.*`. When 1Password is not
+and keeps a copy under `~/.dev-environment-backup.*`; later runs replace
+`~/.ssh/config` itself, keeping a copy if it was edited, so tools that add
+lines there (an `Include` from OrbStack or `gcloud compute config-ssh`, for
+example) belong in `config.local` instead. When 1Password is not
 installed, the config has no agent and SSH uses its defaults. On WSL, use the
 1Password agent from Windows through `ssh.exe` instead; see 1Password's WSL
 guide.

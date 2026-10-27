@@ -130,19 +130,23 @@ if ! grep -qs '^# Installed by dev-environment' "$HOME/.ssh/config"; then
   warn 'SSH config is not the one this repo installs; run scripts/setup-ssh.sh.'
 fi
 agent="$(ssh -G github.com 2>/dev/null | awk '$1 == "identityagent" { $1 = ""; sub(/^ /, ""); print }')"
-if [[ -z "$agent" || "$agent" == none || "$agent" == SSH_AUTH_SOCK ]]; then
-  echo 'SSH uses the default agent.'
+if [[ -z "$agent" || "$agent" == SSH_AUTH_SOCK || "$agent" == "\$SSH_AUTH_SOCK" ]]; then
+  echo 'SSH uses the agent in SSH_AUTH_SOCK.'
+elif [[ "$agent" == none ]]; then
+  echo 'SSH uses no agent.'
 elif [[ ! -S "$agent" ]]; then
   warn 'The 1Password SSH agent is not running; turn it on in 1Password (Settings → Developer).'
 else
-  printf '%-14s %s key(s) in 1Password\n' 'SSH agent' "$(SSH_AUTH_SOCK="$agent" ssh-add -l 2>/dev/null | grep -c .)"
+  # ssh-add -l exits 1 and prints a message when the agent has no keys.
+  keys="$(SSH_AUTH_SOCK="$agent" ssh-add -l 2>/dev/null)" || keys=''
+  printf '%-14s %s key(s) in 1Password\n' 'SSH agent' "$(grep -c . <<<"$keys")"
 fi
 for identity in "$HOME"/.config/git/*.gitconfig; do
   [[ -f "$identity" ]] || continue
   account="$(basename "$identity" .gitconfig)"
   if [[ "$(git config --file "$identity" --bool commit.gpgsign)" != true ]]; then
     printf '%-14s commits not signed\n' "$account"
-  elif program="$(git config --file "$identity" gpg.ssh.program)" && [[ ! -x "$program" ]]; then
+  elif program="$(git config --file "$identity" gpg.ssh.program)" && ! command -v "$program" >/dev/null; then
     warn "$account signs commits with $program, which is missing."
   else
     printf '%-14s commits signed\n' "$account"

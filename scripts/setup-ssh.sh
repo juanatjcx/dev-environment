@@ -50,6 +50,11 @@ if [[ -e "$config" ]] && ! grep -qxF "$marker" "$config"; then
   mv "$config" "$local_config"
   chmod 600 "$local_config"
   echo "Moved your SSH config to $local_config (copy in $backup)."
+elif [[ -e "$config" ]]; then
+  # The managed file was edited, for example by a tool adding an Include.
+  backup="$(mktemp -d "$HOME/.dev-environment-backup.XXXXXXXX")"
+  cp -p "$config" "$backup/ssh_config"
+  echo "Replacing an edited $config (copy in $backup); keep additions in config.local."
 fi
 install -m 600 "$new" "$config"
 echo "Installed $config${agent:+ with the 1Password SSH agent}."
