@@ -28,7 +28,5 @@ write_identity() {
 }
 write_identity juanatjcx "$1"
 write_identity juanmicrosoft "$2"
-git config --global core.editor vim
-git config --global init.defaultBranch main
 printf 'Git directory identities configured. Backup: %s\n' "$backup"
 echo 'Commit identity is separate from authentication: see docs/accounts.md.'

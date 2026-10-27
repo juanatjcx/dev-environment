@@ -24,4 +24,10 @@ install_file "$root/shell/zshrc" "$HOME/.zshrc" zshrc
 install_file "$root/shell/zprofile" "$HOME/.zprofile" zprofile
 install_file "$root/shell/vimrc" "$HOME/.vimrc" vimrc
 install_file "$root/shell/developer.zsh-theme" "$HOME/.oh-my-zsh/custom/themes/developer.zsh-theme" developer.zsh-theme
+mkdir -p "$HOME/.config/git"
+install_file "$root/git/gitconfig" "$HOME/.config/git/shared.gitconfig" shared.gitconfig
+install_file "$root/git/ignore" "$HOME/.config/git/ignore" git-ignore
+shared="$HOME/.config/git/shared.gitconfig"
+git config --global --get-all include.path | grep -qxF "$shared" ||
+  git config --global --add include.path "$shared"
 printf 'Shell installed. Previous files: %s\nOpen a new terminal to activate.\n' "$backup"

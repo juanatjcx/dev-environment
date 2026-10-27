@@ -1,0 +1,19 @@
+# Shared Git preferences, installed to ~/.config/git/shared.gitconfig and
+# included from ~/.gitconfig. Identities live in the per-account files.
+[core]
+	editor = vim
+	excludesFile = ~/.config/git/ignore
+[init]
+	defaultBranch = main
+[push]
+	# The first push of a new branch creates and tracks it on origin.
+	autoSetupRemote = true
+[pull]
+	# Never create a merge commit on pull; rebase or merge deliberately.
+	ff = only
+[fetch]
+	# Drop remote-tracking branches deleted on the server.
+	prune = true
+[merge]
+	# Show the common ancestor in conflicts.
+	conflictStyle = zdiff3

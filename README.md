@@ -97,7 +97,10 @@ bash scripts/install-shell.sh
 ```
 
 To roll back, copy the backup's `zshrc`, `zprofile` (if present), and
-`developer.zsh-theme`, and `vimrc` (if present) to their original paths. If `.zprofile` did not previously
+`developer.zsh-theme`, and `vimrc` (if present) to their original paths; for
+Git, copy `shared.gitconfig` and `git-ignore` back to `~/.config/git/` as
+`shared.gitconfig` and `ignore`, or remove the `include.path` line from
+`~/.gitconfig`. If `.zprofile` did not previously
 exist, remove the newly installed one. The backup preserves symlinks.
 
 ## Git and accounts
@@ -107,7 +110,6 @@ Set identity on each machine; no email or credential files are copied:
 ```sh
 git config --global user.name "Your Name"
 git config --global user.email "your-verified-email"
-git config --global init.defaultBranch main
 gh auth login
 gh auth setup-git
 gh auth status
@@ -117,6 +119,16 @@ The GitHub CLI provides [Git authentication setup](https://cli.github.com/manual
 For your personal/work identities, run `bash scripts/setup-git.sh PERSONAL_EMAIL WORK_EMAIL`; see [accounts](docs/accounts.md), which also covers commit signing with 1Password and separate Google Cloud and Firebase accounts. Select identities deliberately before your first commit. Authenticate
 AWS, Azure, Google Cloud and Firebase only when needed, using your organization's approved
 SSO/login workflow; never commit their credentials or copied home directories.
+
+Shared Git preferences live in [`git/gitconfig`](git/gitconfig) and global
+ignores in [`git/ignore`](git/ignore). Shell installation copies them to
+`~/.config/git/` (backing up the previous files) and adds an `include.path` for
+the preferences to `~/.gitconfig` once. They set Vim as the editor and `main`
+as the first branch, create the remote branch on the first push, refuse to
+merge on `git pull` when histories diverge (rebase or merge deliberately),
+prune deleted remote branches on fetch, and show the common ancestor in
+conflicts. Settings added to `~/.gitconfig` below the include line override
+them; personal ignores go in a project's `.git/info/exclude`.
 
 ## SSH
 

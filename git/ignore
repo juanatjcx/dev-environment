@@ -1,0 +1,4 @@
+# Global ignores, installed to ~/.config/git/ignore (Git's default location).
+# Project-specific patterns belong in each project's .gitignore.
+.DS_Store
+**/.claude/settings.local.json
