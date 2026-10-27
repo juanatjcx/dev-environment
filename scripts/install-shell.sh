@@ -24,10 +24,16 @@ install_file "$root/shell/zshrc" "$HOME/.zshrc" zshrc
 install_file "$root/shell/zprofile" "$HOME/.zprofile" zprofile
 install_file "$root/shell/vimrc" "$HOME/.vimrc" vimrc
 install_file "$root/shell/developer.zsh-theme" "$HOME/.oh-my-zsh/custom/themes/developer.zsh-theme" developer.zsh-theme
+# Named .config, not .gitconfig, so doctor does not mistake it for an identity.
+shared="$HOME/.config/git/shared.config"
+ignore="$HOME/.config/git/ignore"
+excludes="$(git config --global --path core.excludesFile || true)"
+if [[ -n "$excludes" && "$excludes" != "$ignore" ]]; then
+  echo "Note: ~/.gitconfig sets core.excludesFile to $excludes; the shared one replaces it, so move those patterns to $ignore." >&2
+fi
 mkdir -p "$HOME/.config/git"
-install_file "$root/git/gitconfig" "$HOME/.config/git/shared.gitconfig" shared.gitconfig
-install_file "$root/git/ignore" "$HOME/.config/git/ignore" git-ignore
-shared="$HOME/.config/git/shared.gitconfig"
-git config --global --get-all include.path | grep -qxF "$shared" ||
+install_file "$root/git/gitconfig" "$shared" git-shared.config
+install_file "$root/git/ignore" "$ignore" git-ignore
+git config --global --path --get-all include.path | grep -qxF "$shared" ||
   git config --global --add include.path "$shared"
 printf 'Shell installed. Previous files: %s\nOpen a new terminal to activate.\n' "$backup"

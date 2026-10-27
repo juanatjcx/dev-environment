@@ -96,12 +96,13 @@ For shell-only installation on this machine:
 bash scripts/install-shell.sh
 ```
 
-To roll back, copy the backup's `zshrc`, `zprofile` (if present), and
-`developer.zsh-theme`, and `vimrc` (if present) to their original paths; for
-Git, copy `shared.gitconfig` and `git-ignore` back to `~/.config/git/` as
-`shared.gitconfig` and `ignore`, or remove the `include.path` line from
-`~/.gitconfig`. If `.zprofile` did not previously
-exist, remove the newly installed one. The backup preserves symlinks.
+To roll back, copy the backup's `zshrc`, `zprofile`, `vimrc` and
+`developer.zsh-theme` to their original paths, skipping any the backup lacks;
+if `.zprofile` did not previously exist, remove the newly installed one. The
+backup preserves symlinks. For Git, remove the `include.path` line for
+`shared.config` from `~/.gitconfig`, delete `~/.config/git/shared.config`, and
+copy the backup's `git-ignore` (if present) to `~/.config/git/ignore`, or
+delete that file.
 
 ## Git and accounts
 
@@ -110,6 +111,7 @@ Set identity on each machine; no email or credential files are copied:
 ```sh
 git config --global user.name "Your Name"
 git config --global user.email "your-verified-email"
+git config --global init.defaultBranch main
 gh auth login
 gh auth setup-git
 gh auth status
@@ -122,15 +124,18 @@ SSO/login workflow; never commit their credentials or copied home directories.
 
 Shared Git preferences live in [`git/gitconfig`](git/gitconfig) and global
 ignores in [`git/ignore`](git/ignore). Shell installation copies them to
-`~/.config/git/` (backing up the previous files) and adds an `include.path` for
-the preferences to `~/.gitconfig` once. They set Vim as the editor and `main`
+`~/.config/git/shared.config` and `~/.config/git/ignore` (backing up previous
+files) and adds an `include.path` for the preferences to `~/.gitconfig` once. They set Vim as the editor and `main`
 as the first branch, create the remote branch on the first push, refuse to
 merge on `git pull` when histories diverge (rebase or merge deliberately),
 prune deleted remote branches on fetch, and show the common ancestor in
-conflicts. Because the include comes last in `~/.gitconfig`, these win over
-the same settings made there with `git config --global`; change them in
-`git/gitconfig` instead, or per repository with `git config`. Personal ignores
-for one project go in its `.git/info/exclude`.
+conflicts. Whether a value set with `git config --global` beats the shared one
+depends on where Git writes it in `~/.gitconfig`, so change preferences in
+`git/gitconfig` and rerun the shell installation, or set them per repository
+with `git config`. If you prefer `pull.rebase true`, also set `pull.ff` to
+`true`; otherwise `pull.ff only` stops a diverged pull instead of rebasing. The
+shared file also sets `core.excludesFile`, replacing any other global ignore
+file. Personal ignores for one project go in its `.git/info/exclude`.
 
 ## SSH
 

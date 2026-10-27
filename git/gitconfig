@@ -1,4 +1,4 @@
-# Shared Git preferences, installed to ~/.config/git/shared.gitconfig and
+# Shared Git preferences, installed to ~/.config/git/shared.config and
 # included from ~/.gitconfig. Identities live in the per-account files.
 [core]
 	editor = vim
@@ -15,5 +15,6 @@
 	# Drop remote-tracking branches deleted on the server.
 	prune = true
 [merge]
-	# Show the common ancestor in conflicts.
-	conflictStyle = zdiff3
+	# Show the common ancestor in conflicts. (zdiff3 is tidier but makes
+	# Git older than 2.35, such as Ubuntu 22.04's, fail on checkout.)
+	conflictStyle = diff3
