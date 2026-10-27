@@ -127,8 +127,10 @@ the preferences to `~/.gitconfig` once. They set Vim as the editor and `main`
 as the first branch, create the remote branch on the first push, refuse to
 merge on `git pull` when histories diverge (rebase or merge deliberately),
 prune deleted remote branches on fetch, and show the common ancestor in
-conflicts. Settings added to `~/.gitconfig` below the include line override
-them; personal ignores go in a project's `.git/info/exclude`.
+conflicts. Because the include comes last in `~/.gitconfig`, these win over
+the same settings made there with `git config --global`; change them in
+`git/gitconfig` instead, or per repository with `git config`. Personal ignores
+for one project go in its `.git/info/exclude`.
 
 ## SSH
 
