@@ -42,8 +42,9 @@ recommendations](docs/recommendations.md) afterward.
 
 `doctor.sh` fails when a tool or Brewfile entry is missing. It also checks the
 projects under `~/repos` (Node pins, .NET SDK pins, Docker when a project uses
-it), the selected Xcode, Touch ID for sudo and the Claude Code plugins, and
-prints a warning for each problem without failing.
+it), the selected Xcode, Touch ID for sudo, the SSH agent and which Git
+identities sign commits, and the Claude Code plugins, and prints a warning for
+each problem without failing.
 
 The scripts are executable bash scripts, so `./scripts/bootstrap.sh` works as
 well as `bash scripts/bootstrap.sh`.
@@ -117,6 +118,18 @@ For your personal/work identities, run `bash scripts/setup-git.sh PERSONAL_EMAIL
 AWS, Azure, Google Cloud and Firebase only when needed, using your organization's approved
 SSO/login workflow; never commit their credentials or copied home directories.
 
+## SSH
+
+Bootstrap runs `scripts/setup-ssh.sh`, which installs `~/.ssh/config` so SSH
+uses the 1Password SSH agent (turn it on in 1Password: Settings → Developer).
+Keys stay in 1Password and are approved there. Personal hosts go in
+`~/.ssh/config.local`, which is read first, so its settings win; it is never
+replaced. The first run moves an existing hand-written `~/.ssh/config` there
+and keeps a copy under `~/.dev-environment-backup.*`. When 1Password is not
+installed, the config has no agent and SSH uses its defaults. On WSL, use the
+1Password agent from Windows through `ssh.exe` instead; see 1Password's WSL
+guide.
+
 ## Maintenance
 
 - Update everything with `brew update && brew upgrade --greedy`, then rerun
@@ -145,9 +158,11 @@ SSO/login workflow; never commit their credentials or copied home directories.
 - Avoid `brew bundle cleanup --force` with this repo; unrelated packages may
   be removed. The bootstrap never performs cleanup.
 
-Validation performed locally: Bash/zsh syntax, Ruby Brewfile syntax, isolated
-shell install/reinstall with backups, and interactive shell startup. Linux/WSL
-package installation requires verification on those systems.
+Every push and pull request runs [checks](.github/workflows/check.yml):
+ShellCheck on the scripts, zsh syntax, bash 3.2 syntax on macOS, and Homebrew
+reading the Brewfile. Run `shellcheck scripts/*.sh` before committing. These are
+static checks; they do not install anything, so Linux/WSL setup still needs
+verification on those systems.
 
 Bootstrap initializes Node LTS and installs Vim language tooling. See
 [the editor guide](docs/editor.md), [Python workflow](docs/python.md),

@@ -1,0 +1,2 @@
+# nvm.sh and other sourced files live outside the repo.
+disable=SC1090,SC1091

@@ -32,6 +32,8 @@ mkdir -p "$HOME/.local/bin"
 for tool in typescript-language-server svelteserver vscode-html-language-server vscode-css-language-server vscode-json-language-server vscode-eslint-language-server pyright-langserver; do
   target="$HOME/.local/bin/$tool"
   [[ ! -L "$target" ]] || rm "$target"
+  # The wrapper expands $PATH and $@ when it runs, not now.
+  # shellcheck disable=SC2016
   printf '#!/bin/sh\nexport PATH="%s:$PATH"\nexec "%s" "$@"\n' "$(dirname "$(command -v node)")" "$HOME/.local/share/developer-lsp/node_modules/.bin/$tool" > "$target"
   chmod 755 "$target"
 done

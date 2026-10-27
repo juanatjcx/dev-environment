@@ -11,6 +11,7 @@ brew "ripgrep"
 brew "jq"
 brew "fzf"
 brew "uv"
+brew "shellcheck"
 # Python-enabled Vim is required for the debugger.
 brew "vim"
 # macOS supplies Git and zsh through its developer tools/OS.

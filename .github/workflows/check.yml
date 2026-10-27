@@ -1,0 +1,33 @@
+# Static checks only: nothing is installed from the Brewfile and no setup
+# script runs, so a passing build does not prove a machine would bootstrap.
+name: Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: ShellCheck
+        run: shellcheck scripts/*.sh
+      - name: zsh syntax
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq zsh
+          for f in shell/zshrc shell/zprofile shell/developer.zsh-theme; do zsh -n "$f"; done
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v5
+      # macOS ships bash 3.2; every script must parse with it.
+      - name: bash 3.2 syntax
+        run: for f in scripts/*.sh; do /bin/bash -n "$f"; done
+      - name: Brewfile
+        run: brew bundle list --all --file=Brewfile
